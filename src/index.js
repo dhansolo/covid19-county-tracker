@@ -1,7 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
-// import './index.css';
+import './index.css';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@material-ui/core/Button';
 
 // Create a date string in the format YYYY-MM-DD
 let date = new Date();
@@ -20,7 +26,7 @@ class SearchAPI extends React.Component {
         super(props);
         this.state = {
             county: "",
-            state: "",
+            state: "Alabama",
             data: null,
             notFound: false,
         }
@@ -48,6 +54,7 @@ class SearchAPI extends React.Component {
     }
 
     handleSearchClick() {
+        if(this.state.county === "" || this.state.state === "") { return; }
         // console.log(this.state.county);
         // console.log(this.state.state);
         let reformattedCounty = this.state.county[0].toUpperCase() + this.state.county.slice(1);
@@ -97,66 +104,63 @@ class SearchAPI extends React.Component {
         }
         return (
             <div>
-                <div><input type="text" placeholder="County" value={this.state.county} onChange={this.handleCountyChange}></input></div>
-                {/* <div><input type="text" placeholder="County" value={this.state.state} onChange={this.handleStateChange}></input></div> */}
-                <div>
-                    <label>
-                        <select type="text" value={this.state.state} onChange={this.handleStateChange}>
-                            <option value="" defaultValue disabled>Select State</option>
-                            <option value="Alabama">Alabama</option>
-                            <option value="Alaska">Alaska</option>
-                            <option value="Arizona">Arizona</option>
-                            <option value="Arkansas">Arkansas</option>
-                            <option value="California">California</option>
-                            <option value="Colorado">Colorado</option>
-                            <option value="Connecticut">Connecticut</option>
-                            <option value="Delaware">Delaware</option>
-                            <option value="Florida">Florida</option>
-                            <option value="Georgia">Georgia</option>
-                            <option value="Hawaii">Hawaii</option>
-                            <option value="Idaho">Idaho</option>
-                            <option value="Illinois">Illinois</option>
-                            <option value="Indiana">Indiana</option>
-                            <option value="Iowa">Iowa</option>
-                            <option value="Kansas">Kansas</option>
-                            <option value="Kentucky">Kentucky</option>
-                            <option value="Louisiana">Louisiana</option>
-                            <option value="Maine">Maine</option>
-                            <option value="Maryland">Maryland</option>
-                            <option value="Massachusetts">Massachusetts</option>
-                            <option value="Michigan">Michigan</option>
-                            <option value="Minnesota">Minnesota</option>
-                            <option value="Mississippi">Mississippi</option>
-                            <option value="Missouri">Missouri</option>
-                            <option value="Montana">Montana</option>
-                            <option value="Nebraska">Nebraska</option>
-                            <option value="Nevada">Nevada</option>
-                            <option value="New Hampshire">New Hampshire</option>
-                            <option value="New Jersey">New Jersey</option>
-                            <option value="New Mexico">New Mexico</option>
-                            <option value="New York">New York</option>
-                            <option value="North Carolina">North Carolina</option>
-                            <option value="North Dakota">North Dakota</option>
-                            <option value="Ohio">Ohio</option>
-                            <option value="Oklahoma">Oklahoma</option>
-                            <option value="Oregon">Oregon</option>
-                            <option value="Pennsylvania">Pennsylvania</option>
-                            <option value="Rhode Island">Rhode Island</option>
-                            <option value="South Carolina">South Carolina</option>
-                            <option value="South Dakota">South Dakota</option>
-                            <option value="Tennessee">Tennessee</option>
-                            <option value="Texas">Texas</option>
-                            <option value="Utah">Utah</option>
-                            <option value="Vermont">Vermont</option>
-                            <option value="Virginia">Virginia</option>
-                            <option value="Washington">Washington</option>
-                            <option value="West Virginia">West Virginia</option>
-                            <option value="Wisconsin">Wisconsin</option>
-                            <option value="Wyoming">Wyoming</option>
-                        </select>
-                    </label>
+                <div class="search">
+                    <TextField type="text" placeholder="County" value={this.state.county} onChange={this.handleCountyChange}></TextField>
+                    <Select type="text" value={this.state.state} onChange={this.handleStateChange}>
+                        <MenuItem value="" defaultValue disabled>Select State</MenuItem>
+                        <MenuItem value="Alabama">Alabama</MenuItem>
+                        <MenuItem value="Alaska">Alaska</MenuItem>
+                        <MenuItem value="Arizona">Arizona</MenuItem>
+                        <MenuItem value="Arkansas">Arkansas</MenuItem>
+                        <MenuItem value="California">California</MenuItem>
+                        <MenuItem value="Colorado">Colorado</MenuItem>
+                        <MenuItem value="Connecticut">Connecticut</MenuItem>
+                        <MenuItem value="Delaware">Delaware</MenuItem>
+                        <MenuItem value="Florida">Florida</MenuItem>
+                        <MenuItem value="Georgia">Georgia</MenuItem>
+                        <MenuItem value="Hawaii">Hawaii</MenuItem>
+                        <MenuItem value="Idaho">Idaho</MenuItem>
+                        <MenuItem value="Illinois">Illinois</MenuItem>
+                        <MenuItem value="Indiana">Indiana</MenuItem>
+                        <MenuItem value="Iowa">Iowa</MenuItem>
+                        <MenuItem value="Kansas">Kansas</MenuItem>
+                        <MenuItem value="Kentucky">Kentucky</MenuItem>
+                        <MenuItem value="Louisiana">Louisiana</MenuItem>
+                        <MenuItem value="Maine">Maine</MenuItem>
+                        <MenuItem value="Maryland">Maryland</MenuItem>
+                        <MenuItem value="Massachusetts">Massachusetts</MenuItem>
+                        <MenuItem value="Michigan">Michigan</MenuItem>
+                        <MenuItem value="Minnesota">Minnesota</MenuItem>
+                        <MenuItem value="Mississippi">Mississippi</MenuItem>
+                        <MenuItem value="Missouri">Missouri</MenuItem>
+                        <MenuItem value="Montana">Montana</MenuItem>
+                        <MenuItem value="Nebraska">Nebraska</MenuItem>
+                        <MenuItem value="Nevada">Nevada</MenuItem>
+                        <MenuItem value="New Hampshire">New Hampshire</MenuItem>
+                        <MenuItem value="New Jersey">New Jersey</MenuItem>
+                        <MenuItem value="New Mexico">New Mexico</MenuItem>
+                        <MenuItem value="New York">New York</MenuItem>
+                        <MenuItem value="North Carolina">North Carolina</MenuItem>
+                        <MenuItem value="North Dakota">North Dakota</MenuItem>
+                        <MenuItem value="Ohio">Ohio</MenuItem>
+                        <MenuItem value="Oklahoma">Oklahoma</MenuItem>
+                        <MenuItem value="Oregon">Oregon</MenuItem>
+                        <MenuItem value="Pennsylvania">Pennsylvania</MenuItem>
+                        <MenuItem value="Rhode Island">Rhode Island</MenuItem>
+                        <MenuItem value="South Carolina">South Carolina</MenuItem>
+                        <MenuItem value="South Dakota">South Dakota</MenuItem>
+                        <MenuItem value="Tennessee">Tennessee</MenuItem>
+                        <MenuItem value="Texas">Texas</MenuItem>
+                        <MenuItem value="Utah">Utah</MenuItem>
+                        <MenuItem value="Vermont">Vermont</MenuItem>
+                        <MenuItem value="Virginia">Virginia</MenuItem>
+                        <MenuItem value="Washington">Washington</MenuItem>
+                        <MenuItem value="West Virginia">West Virginia</MenuItem>
+                        <MenuItem value="Wisconsin">Wisconsin</MenuItem>
+                        <MenuItem value="Wyoming">Wyoming</MenuItem>
+                    </Select>
                 </div>
-                <div><button onClick={this.handleSearchClick}>Search</button></div>
+                <div><Button variant="contained" color="primary" onClick={this.handleSearchClick}>Search</Button></div>
                 {info}
                 {notfound}
             </div>
@@ -168,11 +172,11 @@ class Info extends React.Component {
     render() {
         let rate = (this.props.deaths/this.props.confirmed) * 100;
         return (
-            <div>
-                <h2>Statistics for {this.props.county} County, {this.props.state}</h2>
-                <h3>Confirmed: {this.props.confirmed}</h3>
-                <h3>Deaths: {this.props.deaths}</h3>
-                <h3>Approximate Death Rate: {rate.toFixed(3)}%</h3>
+            <div class="info">
+                <h3>Statistics for {this.props.county} County, {this.props.state}</h3>
+                <h4>Confirmed: {this.props.confirmed}</h4>
+                <h4>Deaths: {this.props.deaths}</h4>
+                <h4>Approximate Death Rate: {rate.toFixed(3)}%</h4>
             </div>
         )
     }
@@ -181,7 +185,7 @@ class Info extends React.Component {
 class NotFound extends React.Component {
     render() {
         return (
-            <div>No data found, are you sure you entered the correct County and State?</div>
+            <div class="info">No data found, are you sure you entered the correct County and State?</div>
         )
     }
 }
@@ -232,7 +236,7 @@ class DisplayWorldData extends React.Component {
         return(
             <div>
                 <h4>World Statistics</h4>
-                <h5>Confirmed: {this.props.data.confirmed} | Recovered: {this.props.data.recovered} | Deaths: {this.props.data.deaths} | Death Rate: {rate.toFixed(3)}%</h5>
+                <p>Confirmed: {this.props.data.confirmed} | Recovered: {this.props.data.recovered} | Deaths: {this.props.data.deaths} | Death Rate: {rate.toFixed(3)}%</p>
             </div>
         )
     }
@@ -240,11 +244,16 @@ class DisplayWorldData extends React.Component {
 
 function App() {
     return (
-        <div>
-            <div><h1>Data as of {current}</h1></div>
-            <div><SearchAPI /></div>
-            <div><WorldData /></div>
-        </div>
+        <Grid container justify="center">
+            <div class="main">
+                <div class="headers">
+                    <h1>COVID-19 County Tracker</h1>
+                    <h4>Data as of {current}</h4>
+                </div>
+                <div class="search"><SearchAPI /></div>
+                <footer class="world-data"><WorldData /></footer>
+            </div>
+        </Grid>
     );
 }
 

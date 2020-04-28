@@ -1,0 +1,35 @@
+html {
+    background-color: antiquewhite;
+}
+
+.main {
+    font-family: "Roboto", sans-serif;
+    text-align: center;
+    color: black;
+}
+
+.search {
+    margin: 10px;
+}
+
+.info {
+    margin-top: 20%;
+}
+
+.info h3 {
+    text-decoration: underline;
+}
+
+.headers h4 {
+    color: red;
+}
+
+.world-data {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #B6D9EE;
+    color: black;
+    text-align: center;
+}
