@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import './index.css';
+
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
@@ -14,14 +15,10 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 // Create a date string in the format YYYY-MM-DD
 let date = new Date();
 let current;
-if((date.getMonth() + 1) < 10) {
-    current = date.getFullYear() + "-0" + (date.getMonth() + 1) + "-" + (date.getDate() - 1);
-} else {
-    current = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (date.getDate() - 1);
-}
+let currentDate = date.getFullYear() + "-0" + (date.getMonth() + 1) + "-" + (date.getDate() - 1);
 
-let confirmed;
-let deaths;
+var confirmed;
+var deaths;
 
 class SearchAPI extends React.Component {
     constructor(props) {
@@ -39,7 +36,6 @@ class SearchAPI extends React.Component {
     }
 
     handleCountyChange(event) {
-        console.log(event.target.value);
         if(event.target.value) {
             this.setState({
                 county: event.target.value,
@@ -64,42 +60,81 @@ class SearchAPI extends React.Component {
 
     handleSearchClick() {
         if(this.state.county === "" || this.state.state === "") { return; }
-        // console.log(this.state.county);
-        // console.log(this.state.state);
-        let reformattedCounty = this.state.county[0].toUpperCase() + this.state.county.slice(1);
         let reformattedState = this.state.state[0].toUpperCase() + this.state.state.slice(1);
-        this.setState({ county: reformattedCounty, state: reformattedState, loading: true})
-        axios({
-            "method":"GET",
-            "url":"https://covid-19-statistics.p.rapidapi.com/reports",
-            "headers":{
-                "content-type":"application/octet-stream",
-                "x-rapidapi-host":"covid-19-statistics.p.rapidapi.com",
-                "x-rapidapi-key":"3de6fc79fbmshc411c445cdb1522p19aee5jsn38ed18b78689"
-            },
-            "params":{
-                "region_province":this.state.state,
-                "iso":"USA",
-                "region_name":"US",
-                "city_name":this.state.county,
-                "date":current,
-                "q":"US " + this.state.state
-            }
-        })
-        .then((response)=>{
-            // console.log(response);
-            if(response.data.data.length > 0) {
-                this.setState({ data: response.data.data[0].region.cities[0], notFound: false, loading: false });
-                confirmed = this.state.data.confirmed;
-                deaths = this.state.data.deaths;
-                // console.log(confirmed, deaths);
-            } else {
-                this.setState({ data: null, notFound: true, loading: false });
-            }
-        })
-        .catch((error)=>{
-            console.log(error);
-        })
+        let reformattedCounty = this.state.county.toLowerCase();
+        if(reformattedCounty.includes("county")) {
+            reformattedCounty = reformattedCounty.substring(0, reformattedCounty.indexOf("county") - 1);
+        }
+        reformattedCounty = reformattedCounty[0].toUpperCase() + reformattedCounty.slice(1);
+        this.setState({ county: reformattedCounty, state: reformattedState, loading: true, notFound: false, data: null});
+        // current = date.getFullYear() + "-0" + (date.getMonth() + 1) + "-" + (date.getDate() - 1);
+        // axios({
+        //     "method":"GET",
+        //     "url":"https://covid-19-statistics.p.rapidapi.com/reports",
+        //     "headers":{
+        //         "content-type":"application/octet-stream",
+        //         "x-rapidapi-host":"covid-19-statistics.p.rapidapi.com",
+        //         "x-rapidapi-key":"3de6fc79fbmshc411c445cdb1522p19aee5jsn38ed18b78689"
+        //     },
+        //     "params":{
+        //         "region_province":this.state.state,
+        //         "iso":"USA",
+        //         "region_name":"US",
+        //         "city_name":reformattedCounty,
+        //         "date":current,
+        //         "q":"US " + this.state.state
+        //     }
+        // })
+        // .then((response)=>{
+        //     // console.log(response);
+        //     if(response.data.data.length > 0) {
+        //         this.setState({ data: response.data.data[0].region.cities[0], notFound: false, loading: false});
+        //         confirmed = this.state.data.confirmed;
+        //         deaths = this.state.data.deaths;
+        //     } else {
+        //         this.setState({ data: null, notFound: true, loading: false });
+        //     }
+        // })
+        // .catch((error)=>{
+        //     console.log(error);
+        // })   
+        let count = 0;
+        while(count < 7) {
+            current = date.getFullYear() + "-0" + (date.getMonth() + 1) + "-" + (date.getDate() - 1 - count);
+            console.log(current);
+            axios({
+                "method":"GET",
+                "url":"https://covid-19-statistics.p.rapidapi.com/reports",
+                "headers":{
+                    "content-type":"application/octet-stream",
+                    "x-rapidapi-host":"",
+                    "x-rapidapi-key":""
+                },
+                "params":{
+                    "region_province":this.state.state,
+                    "iso":"USA",
+                    "region_name":"US",
+                    "city_name":reformattedCounty,
+                    "date":current,
+                    "q":"US " + this.state.state
+                }
+            })
+            .then((response)=>{
+                // console.log(response);
+                if(response.data.data.length > 0) {
+                    this.setState({ data: response.data.data[0].region.cities[0], notFound: false, loading: false});
+                    confirmed = this.state.data.confirmed;
+                    deaths = this.state.data.deaths;
+                    console.log(confirmed, deaths);
+                } else {
+                    this.setState({ data: null, notFound: true, loading: false });
+                }
+            })
+            .catch((error)=>{
+                console.log(error);
+            })   
+            count++;
+        }
     }
 
     render() {
@@ -217,13 +252,18 @@ class WorldData extends React.Component {
         }
     }
     componentDidMount() {
+        if((date.getMonth() + 1) < 10) {
+            current = date.getFullYear() + "-0" + (date.getMonth() + 1) + "-" + (date.getDate() - 1);
+        } else {
+            current = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (date.getDate() - 1);
+        }
         axios({
             "method":"GET",
             "url":"https://covid-19-statistics.p.rapidapi.com/reports/total",
             "headers":{
                 "content-type":"application/octet-stream",
-                "x-rapidapi-host":"",
-                "x-rapidapi-key":""
+                "x-rapidapi-host":"covid-19-statistics.p.rapidapi.com",
+                "x-rapidapi-key":"3de6fc79fbmshc411c445cdb1522p19aee5jsn38ed18b78689"
             },"params":{
                 "date":current
             }
@@ -281,7 +321,7 @@ function App() {
                 <div class="main">
                     <div class="headers">
                         <h1>COVID-19 County Tracker</h1>
-                        <h4>Data as of {current}</h4>
+                        <h4>Data as of {currentDate}</h4>
                     </div>
                     <div class="search"><SearchAPI /></div>
                     <footer class="world-data"><WorldData /></footer>
