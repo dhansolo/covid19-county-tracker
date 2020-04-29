@@ -12,8 +12,26 @@ html {
     margin: 10px;
 }
 
-.info {
+.serach #loading {
+    margin: 20%;
+}
+
+#search-county {
+    width: 120px;
+    right: 10px;
+}
+
+#search-state {
+    width: 120px;
+    left: 10px;
+}
+
+/* .info {
     margin-top: 20%;
+} */
+
+#result {
+    margin-top: 25px;
 }
 
 .info h3 {
