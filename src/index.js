@@ -73,8 +73,8 @@ class SearchAPI extends React.Component {
         //     "url":"https://covid-19-statistics.p.rapidapi.com/reports",
         //     "headers":{
         //         "content-type":"application/octet-stream",
-        //         "x-rapidapi-host":"covid-19-statistics.p.rapidapi.com",
-        //         "x-rapidapi-key":"3de6fc79fbmshc411c445cdb1522p19aee5jsn38ed18b78689"
+        //         "x-rapidapi-host":"",
+        //         "x-rapidapi-key":""
         //     },
         //     "params":{
         //         "region_province":this.state.state,
