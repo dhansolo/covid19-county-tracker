@@ -12,6 +12,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
+import {VictoryChart, VictoryLine} from 'victory';
+
 // Create a date string in the format YYYY-MM-DD
 let date = new Date();
 let current;
@@ -19,6 +21,7 @@ let currentDate = date.getFullYear() + "-0" + (date.getMonth() + 1) + "-" + (dat
 
 let sevenDay = [];
 let info = null;
+let visualize = null;
 
 class SearchAPI extends React.Component {
     constructor(props) {
@@ -60,6 +63,10 @@ class SearchAPI extends React.Component {
 
     async handleSearchClick() {
         sevenDay = [];
+        this.setState({ data: null});
+        info = null;
+        visualize = null;
+
         if(this.state.county === "" || this.state.state === "") { return; }
         let reformattedState = this.state.state[0].toUpperCase() + this.state.state.slice(1);
         let reformattedCounty = this.state.county.toLowerCase();
@@ -67,15 +74,14 @@ class SearchAPI extends React.Component {
             reformattedCounty = reformattedCounty.substring(0, reformattedCounty.indexOf("county") - 1);
         }
         reformattedCounty = reformattedCounty[0].toUpperCase() + reformattedCounty.slice(1);
-        this.setState({ county: reformattedCounty, state: reformattedState, loading: true, notFound: false, data: null});  
 
+        this.setState({ county: reformattedCounty, state: reformattedState, loading: true, notFound: false, data: null});  
         let count = 0;
         while(count < 7) {  
-            current = date.getFullYear() + "-0" + (date.getMonth() + 1) + "-" + (date.getDate() - count);
+            current = date.getFullYear() + "-0" + (date.getMonth() + 1) + "-" + (date.getDate() - count - 1);
             this.callAxios(current);
             count++;
         }
-        console.log(sevenDay);
     }
 
     async callAxios(current) {
@@ -109,6 +115,12 @@ class SearchAPI extends React.Component {
                     }
                 )
                 sevenDay.sort((a, b) => a.date - b.date);
+                if(sevenDay.length === 7) {
+                    console.log("setting visualize");
+                    visualize = <Visualize />
+                    console.log(visualize);
+                    this.forceUpdate();
+                }
             } else {
                 this.setState({ data: null, notFound: true, loading: false });
             }
@@ -122,7 +134,9 @@ class SearchAPI extends React.Component {
     render() {
         let notfound;
         let loadImage;
-        if(this.state.data) {info = <Info confirmed={this.state.data.confirmed} deaths={this.state.data.deaths} county={this.state.county} state={this.state.state}/>;}
+        if(this.state.data && !this.state.loading) {
+            info = <Info confirmed={this.state.data.confirmed} deaths={this.state.data.deaths} county={this.state.county} state={this.state.state}/>;
+        }
         if(this.state.loading) {loadImage = <LoadingScreen />}
         if(this.state.notFound) {notfound = <NotFound />}
         return (
@@ -189,6 +203,7 @@ class SearchAPI extends React.Component {
                 <div id="result">
                     {loadImage}
                     {info}
+                    {visualize}
                     {notfound}
                 </div>
             </div>
@@ -198,14 +213,42 @@ class SearchAPI extends React.Component {
 
 class Info extends React.Component {
     render() {
+        console.log("info rendering");
+        console.log(visualize)
         let rate = (this.props.deaths/this.props.confirmed) * 100;
         return (
-            <div class="info">
-                <h3>Statistics for {this.props.county} County, {this.props.state}</h3>
-                <h4>Confirmed: {this.props.confirmed}</h4>
-                <h4>Fatalities: {this.props.deaths}</h4>
-                <h4>Approximate Fatality Rate: {rate.toFixed(3)}%</h4>
+            <div>
+                <div class="info">
+                    <h3>Statistics for {this.props.county} County, {this.props.state}</h3>
+                    <h4>Confirmed: {this.props.confirmed}</h4>
+                    <h4>Fatalities: {this.props.deaths}</h4>
+                    <h4>Approximate Fatality Rate: {rate.toFixed(3)}%</h4>
+                </div>
             </div>
+        )  
+    }
+}
+
+class Visualize extends React.Component {
+    render() {
+        return(
+            <VictoryChart viewBox={"0 0 100, 100"}>
+                <VictoryLine 
+                    data={[
+                        {x: 1, y: sevenDay[0].confirmed},
+                        {x: 2, y: sevenDay[1].confirmed},
+                        {x: 3, y: sevenDay[2].confirmed},
+                        {x: 4, y: sevenDay[3].confirmed},
+                        {x: 5, y: sevenDay[4].confirmed},
+                        {x: 6, y: sevenDay[5].confirmed},
+                        {x: 7, y: sevenDay[6].confirmed},
+                    ]}
+                    animate={{
+                        duration: 2000,
+                        onLoad: { duration: 1000 }
+                    }}
+                />
+            </VictoryChart>
         )
     }
 }
@@ -237,8 +280,8 @@ class WorldData extends React.Component {
             "url":"https://covid-19-statistics.p.rapidapi.com/reports/total",
             "headers":{
                 "content-type":"application/octet-stream",
-                "x-rapidapi-host":"",
-                "x-rapidapi-key":""
+                "x-rapidapi-host":"covid-19-statistics.p.rapidapi.com",
+                "x-rapidapi-key":"979c35ee84mshaaafcc5c9267b5dp1ff29cjsn060a23d9a089"
             },"params":{
                 "date":current
             }
