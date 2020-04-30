@@ -17,8 +17,8 @@ let date = new Date();
 let current;
 let currentDate = date.getFullYear() + "-0" + (date.getMonth() + 1) + "-" + (date.getDate() - 1);
 
-var confirmed;
-var deaths;
+let sevenDay = [];
+let info = null;
 
 class SearchAPI extends React.Component {
     constructor(props) {
@@ -58,7 +58,8 @@ class SearchAPI extends React.Component {
         });
     }
 
-    handleSearchClick() {
+    async handleSearchClick() {
+        sevenDay = [];
         if(this.state.county === "" || this.state.state === "") { return; }
         let reformattedState = this.state.state[0].toUpperCase() + this.state.state.slice(1);
         let reformattedCounty = this.state.county.toLowerCase();
@@ -66,90 +67,64 @@ class SearchAPI extends React.Component {
             reformattedCounty = reformattedCounty.substring(0, reformattedCounty.indexOf("county") - 1);
         }
         reformattedCounty = reformattedCounty[0].toUpperCase() + reformattedCounty.slice(1);
-        this.setState({ county: reformattedCounty, state: reformattedState, loading: true, notFound: false, data: null});
-        // current = date.getFullYear() + "-0" + (date.getMonth() + 1) + "-" + (date.getDate() - 1);
-        // axios({
-        //     "method":"GET",
-        //     "url":"https://covid-19-statistics.p.rapidapi.com/reports",
-        //     "headers":{
-        //         "content-type":"application/octet-stream",
-        //         "x-rapidapi-host":"covid-19-statistics.p.rapidapi.com",
-        //         "x-rapidapi-key":"3de6fc79fbmshc411c445cdb1522p19aee5jsn38ed18b78689"
-        //     },
-        //     "params":{
-        //         "region_province":this.state.state,
-        //         "iso":"USA",
-        //         "region_name":"US",
-        //         "city_name":reformattedCounty,
-        //         "date":current,
-        //         "q":"US " + this.state.state
-        //     }
-        // })
-        // .then((response)=>{
-        //     // console.log(response);
-        //     if(response.data.data.length > 0) {
-        //         this.setState({ data: response.data.data[0].region.cities[0], notFound: false, loading: false});
-        //         confirmed = this.state.data.confirmed;
-        //         deaths = this.state.data.deaths;
-        //     } else {
-        //         this.setState({ data: null, notFound: true, loading: false });
-        //     }
-        // })
-        // .catch((error)=>{
-        //     console.log(error);
-        // })   
+        this.setState({ county: reformattedCounty, state: reformattedState, loading: true, notFound: false, data: null});  
+
         let count = 0;
-        while(count < 7) {
-            current = date.getFullYear() + "-0" + (date.getMonth() + 1) + "-" + (date.getDate() - 1 - count);
-            console.log(current);
-            axios({
-                "method":"GET",
-                "url":"https://covid-19-statistics.p.rapidapi.com/reports",
-                "headers":{
-                    "content-type":"application/octet-stream",
-                    "x-rapidapi-host":"",
-                    "x-rapidapi-key":""
-                },
-                "params":{
-                    "region_province":this.state.state,
-                    "iso":"USA",
-                    "region_name":"US",
-                    "city_name":reformattedCounty,
-                    "date":current,
-                    "q":"US " + this.state.state
-                }
-            })
-            .then((response)=>{
-                // console.log(response);
-                if(response.data.data.length > 0) {
-                    this.setState({ data: response.data.data[0].region.cities[0], notFound: false, loading: false});
-                    confirmed = this.state.data.confirmed;
-                    deaths = this.state.data.deaths;
-                    console.log(confirmed, deaths);
-                } else {
-                    this.setState({ data: null, notFound: true, loading: false });
-                }
-            })
-            .catch((error)=>{
-                console.log(error);
-            })   
+        while(count < 7) {  
+            current = date.getFullYear() + "-0" + (date.getMonth() + 1) + "-" + (date.getDate() - count);
+            this.callAxios(current);
             count++;
         }
+        console.log(sevenDay);
+    }
+
+    async callAxios(current) {
+        return axios({
+            "method":"GET",
+            "url":"https://covid-19-statistics.p.rapidapi.com/reports",
+            "headers":{
+                "content-type":"application/octet-stream",
+                "x-rapidapi-host":"",
+                "x-rapidapi-key":""
+            },
+            "params":{
+                "region_province":this.state.state,
+                "iso":"USA",
+                "region_name":"US",
+                "city_name":this.state.county,
+                "date":current,
+                "q":"US " + this.state.state
+            }
+        })
+        .then((response)=>{
+            if(response.data.data.length > 0) {
+                if(current === currentDate) {
+                    this.setState({ data: response.data.data[0].region.cities[0], notFound: false, loading: false});
+                }
+                sevenDay.push(
+                    {
+                        date: new Date(response.data.data[0].region.cities[0].date),
+                        confirmed: response.data.data[0].region.cities[0].confirmed,
+                        deaths: response.data.data[0].region.cities[0].deaths
+                    }
+                )
+                sevenDay.sort((a, b) => a.date - b.date);
+            } else {
+                this.setState({ data: null, notFound: true, loading: false });
+            }
+        })
+        .catch((error)=>{
+            console.log(error);
+            return;
+        }) 
     }
 
     render() {
-        let info;
         let notfound;
         let loadImage;
-        if(this.state.loading) {
-            loadImage = <LoadingScreen />
-        }
-        if(this.state.data) {
-            info = <Info confirmed={this.state.data.confirmed} deaths={this.state.data.deaths} county={this.state.county} state={this.state.state}/>;
-        }
-        if(this.state.notFound) {
-            notfound = <NotFound />
-        }
+        if(this.state.data) {info = <Info confirmed={this.state.data.confirmed} deaths={this.state.data.deaths} county={this.state.county} state={this.state.state}/>;}
+        if(this.state.loading) {loadImage = <LoadingScreen />}
+        if(this.state.notFound) {notfound = <NotFound />}
         return (
             <div>
                 <div class="search">
@@ -262,8 +237,8 @@ class WorldData extends React.Component {
             "url":"https://covid-19-statistics.p.rapidapi.com/reports/total",
             "headers":{
                 "content-type":"application/octet-stream",
-                "x-rapidapi-host":"covid-19-statistics.p.rapidapi.com",
-                "x-rapidapi-key":"3de6fc79fbmshc411c445cdb1522p19aee5jsn38ed18b78689"
+                "x-rapidapi-host":"",
+                "x-rapidapi-key":""
             },"params":{
                 "date":current
             }
@@ -332,3 +307,37 @@ function App() {
 }
 
 ReactDOM.render(<App />, document.getElementById("root"));
+
+/*
+current = date.getFullYear() + "-0" + (date.getMonth() + 1) + "-" + (date.getDate() - 1);
+axios({
+    "method":"GET",
+    "url":"https://covid-19-statistics.p.rapidapi.com/reports",
+    "headers":{
+        "content-type":"application/octet-stream",
+        "x-rapidapi-host":"",
+        "x-rapidapi-key":""
+    },
+    "params":{
+        "region_province":this.state.state,
+        "iso":"USA",
+        "region_name":"US",
+        "city_name":reformattedCounty,
+        "date":current,
+        "q":"US " + this.state.state
+    }
+})
+.then((response)=>{
+    // console.log(response);
+    if(response.data.data.length > 0) {
+        this.setState({ data: response.data.data[0].region.cities[0], notFound: false, loading: false});
+        confirmed = this.state.data.confirmed;
+        deaths = this.state.data.deaths;
+    } else {
+        this.setState({ data: null, notFound: true, loading: false });
+    }
+})
+.catch((error)=>{
+    console.log(error);
+}) 
+*/

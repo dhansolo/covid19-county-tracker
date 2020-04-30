@@ -17,12 +17,14 @@ html {
 }
 
 #search-county {
-    width: 120px;
+    text-align: center;
+    width: 150px;
     right: 10px;
 }
 
 #search-state {
-    width: 120px;
+    text-align: center;
+    width: 150px;
     left: 10px;
 }
 
