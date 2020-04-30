@@ -105,7 +105,7 @@ class SearchAPI extends React.Component {
         .then((response)=>{
             if(response.data.data.length > 0) {
                 if(current === currentDate) {
-                    this.setState({ data: response.data.data[0].region.cities[0], notFound: false, loading: false});
+                    this.setState({ data: response.data.data[0].region.cities[0], notFound: false});
                 }
                 sevenDay.push(
                     {
@@ -119,10 +119,10 @@ class SearchAPI extends React.Component {
                     console.log("setting visualize");
                     visualize = <Visualize />
                     console.log(visualize);
-                    this.forceUpdate();
+                    this.setState({ loading: false })
                 }
             } else {
-                this.setState({ data: null, notFound: true, loading: false });
+                this.setState({ data: null, notFound: true, loading: false});
             }
         })
         .catch((error)=>{
@@ -203,7 +203,6 @@ class SearchAPI extends React.Component {
                 <div id="result">
                     {loadImage}
                     {info}
-                    {visualize}
                     {notfound}
                 </div>
             </div>
@@ -224,6 +223,7 @@ class Info extends React.Component {
                     <h4>Fatalities: {this.props.deaths}</h4>
                     <h4>Approximate Fatality Rate: {rate.toFixed(3)}%</h4>
                 </div>
+                <Visualize />
             </div>
         )  
     }
@@ -232,8 +232,12 @@ class Info extends React.Component {
 class Visualize extends React.Component {
     render() {
         return(
-            <VictoryChart viewBox={"0 0 100, 100"}>
+            <VictoryChart>
                 <VictoryLine 
+                    style={{
+                        data: { stroke: "#c43a31" },
+                        parent: { border: "1px solid #ccc", width: "10%"}
+                    }}
                     data={[
                         {x: 1, y: sevenDay[0].confirmed},
                         {x: 2, y: sevenDay[1].confirmed},
@@ -280,8 +284,8 @@ class WorldData extends React.Component {
             "url":"https://covid-19-statistics.p.rapidapi.com/reports/total",
             "headers":{
                 "content-type":"application/octet-stream",
-                "x-rapidapi-host":"covid-19-statistics.p.rapidapi.com",
-                "x-rapidapi-key":"979c35ee84mshaaafcc5c9267b5dp1ff29cjsn060a23d9a089"
+                "x-rapidapi-host":"",
+                "x-rapidapi-key":""
             },"params":{
                 "date":current
             }
