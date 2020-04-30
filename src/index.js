@@ -280,8 +280,8 @@ class WorldData extends React.Component {
             "url":"https://covid-19-statistics.p.rapidapi.com/reports/total",
             "headers":{
                 "content-type":"application/octet-stream",
-                "x-rapidapi-host":"covid-19-statistics.p.rapidapi.com",
-                "x-rapidapi-key":"979c35ee84mshaaafcc5c9267b5dp1ff29cjsn060a23d9a089"
+                "x-rapidapi-host":"",
+                "x-rapidapi-key":""
             },"params":{
                 "date":current
             }
