@@ -69,6 +69,10 @@ class SearchAPI extends React.Component {
         sevenDay = [];
         this.setState({ data: null});
         info = null;
+        minConfirmed = null;
+        minDeaths = null;
+        maxConfirmed = null;
+        maxDeaths = null;
         if(this.state.county === "" || this.state.state === "") { return; }
         let reformattedState = this.state.state[0].toUpperCase() + this.state.state.slice(1);
         let reformattedCounty = this.state.county.toLowerCase();
@@ -285,7 +289,7 @@ class VisualizeConfirmed extends React.Component {
                             onLoad: { duration: 1000 }
                         }}
                         domain={{
-                            y: [this.props.minConfirmed - 1000, this.props.maxConfirmed + 1000]
+                            y: [this.props.minConfirmed - 100, this.props.maxConfirmed + 100]
                         }}
                     />
                 </VictoryChart>
@@ -319,7 +323,7 @@ class VisualizeDeaths extends React.Component {
                             onLoad: { duration: 1000 }
                         }}
                         domain={{
-                            y: [this.props.minDeaths - 100, this.props.maxDeaths + 100]
+                            y: [this.props.minDeaths - 10, this.props.maxDeaths + 10]
                         }}
                     />
                 </VictoryChart>
