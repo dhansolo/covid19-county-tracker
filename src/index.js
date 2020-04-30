@@ -21,7 +21,11 @@ let currentDate = date.getFullYear() + "-0" + (date.getMonth() + 1) + "-" + (dat
 
 let sevenDay = [];
 let info = null;
-let visualize = null;
+
+let minConfirmed = null;
+let minDeaths = null;
+let maxConfirmed = null;
+let maxDeaths = null;
 
 class SearchAPI extends React.Component {
     constructor(props) {
@@ -65,8 +69,6 @@ class SearchAPI extends React.Component {
         sevenDay = [];
         this.setState({ data: null});
         info = null;
-        visualize = null;
-
         if(this.state.county === "" || this.state.state === "") { return; }
         let reformattedState = this.state.state[0].toUpperCase() + this.state.state.slice(1);
         let reformattedCounty = this.state.county.toLowerCase();
@@ -79,6 +81,7 @@ class SearchAPI extends React.Component {
         let count = 0;
         while(count < 7) {  
             current = date.getFullYear() + "-0" + (date.getMonth() + 1) + "-" + (date.getDate() - count - 1);
+            // console.log(current);
             this.callAxios(current);
             count++;
         }
@@ -90,8 +93,8 @@ class SearchAPI extends React.Component {
             "url":"https://covid-19-statistics.p.rapidapi.com/reports",
             "headers":{
                 "content-type":"application/octet-stream",
-                "x-rapidapi-host":"",
-                "x-rapidapi-key":""
+                "x-rapidapi-host": "",
+                "x-rapidapi-key": ""
             },
             "params":{
                 "region_province":this.state.state,
@@ -103,22 +106,34 @@ class SearchAPI extends React.Component {
             }
         })
         .then((response)=>{
+            //console.log(response);
             if(response.data.data.length > 0) {
                 if(current === currentDate) {
                     this.setState({ data: response.data.data[0].region.cities[0], notFound: false});
                 }
+                // console.log(response.data.data[0].region.cities[0].date);
+                if(response.data.data[0].region.cities[0].confirmed < minConfirmed || minConfirmed === null) { 
+                    minConfirmed = response.data.data[0].region.cities[0].confirmed; 
+                }
+                if(response.data.data[0].region.cities[0].confirmed > maxConfirmed || maxConfirmed === null) { 
+                    maxConfirmed = response.data.data[0].region.cities[0].confirmed; 
+                }
+                if(response.data.data[0].region.cities[0].deaths < minDeaths || minDeaths === null) { 
+                    minDeaths = response.data.data[0].region.cities[0].deaths; 
+                }
+                if(response.data.data[0].region.cities[0].deaths > maxDeaths || maxDeaths === null) { 
+                    maxDeaths = response.data.data[0].region.cities[0].deaths; 
+                }
                 sevenDay.push(
                     {
-                        date: new Date(response.data.data[0].region.cities[0].date),
+                        date: current,
                         confirmed: response.data.data[0].region.cities[0].confirmed,
                         deaths: response.data.data[0].region.cities[0].deaths
                     }
                 )
-                sevenDay.sort((a, b) => a.date - b.date);
+                sevenDay.sort((a, b) => new Date(a.date) - new Date(b.date));
+                //console.log(sevenDay);
                 if(sevenDay.length === 7) {
-                    console.log("setting visualize");
-                    visualize = <Visualize />
-                    console.log(visualize);
                     this.setState({ loading: false })
                 }
             } else {
@@ -135,7 +150,16 @@ class SearchAPI extends React.Component {
         let notfound;
         let loadImage;
         if(this.state.data && !this.state.loading) {
-            info = <Info confirmed={this.state.data.confirmed} deaths={this.state.data.deaths} county={this.state.county} state={this.state.state}/>;
+            info = <Info 
+                confirmed={this.state.data.confirmed} 
+                deaths={this.state.data.deaths} 
+                county={this.state.county} 
+                state={this.state.state} 
+                minConfirmed={minConfirmed} 
+                minDeaths={minDeaths}
+                maxConfirmed={maxConfirmed}
+                maxDeaths={maxDeaths}
+                />;
         }
         if(this.state.loading) {loadImage = <LoadingScreen />}
         if(this.state.notFound) {notfound = <NotFound />}
@@ -201,8 +225,8 @@ class SearchAPI extends React.Component {
                 </div>
                 <Button id="search-button" variant="outlined" size="small" onClick={this.handleSearchClick}>Search</Button>
                 <div id="result">
-                    {loadImage}
                     {info}
+                    {loadImage}
                     {notfound}
                 </div>
             </div>
@@ -212,47 +236,94 @@ class SearchAPI extends React.Component {
 
 class Info extends React.Component {
     render() {
-        console.log("info rendering");
-        console.log(visualize)
+        // console.log("info rendering");
+        // console.log(visualizeConfirmed)
         let rate = (this.props.deaths/this.props.confirmed) * 100;
         return (
             <div>
-                <div class="info">
-                    <h3>Statistics for {this.props.county} County, {this.props.state}</h3>
-                    <h4>Confirmed: {this.props.confirmed}</h4>
-                    <h4>Fatalities: {this.props.deaths}</h4>
-                    <h4>Approximate Fatality Rate: {rate.toFixed(3)}%</h4>
-                </div>
-                <Visualize />
+                <Grid container justify="center">
+                    <div class="info">
+                        <Grid item xs={12}>
+                            <h3>Statistics for {this.props.county} County, {this.props.state}</h3>
+                            <h4>Confirmed: {this.props.confirmed}</h4>
+                            <h4>Fatalities: {this.props.deaths}</h4>
+                            <h4>Approximate Fatality Rate: {rate.toFixed(3)}%</h4>
+                        </Grid>
+                        <Grid container>
+                                <VisualizeConfirmed county={this.props.county} minConfirmed={this.props.minConfirmed} maxConfirmed={this.props.maxConfirmed}/>
+                                <VisualizeDeaths county={this.props.county} minDeaths={this.props.minDeaths} maxDeaths={this.props.maxDeaths}/>
+                        </Grid>
+                    </div>
+                </Grid>
             </div>
         )  
     }
 }
 
-class Visualize extends React.Component {
+class VisualizeConfirmed extends React.Component {
     render() {
         return(
-            <VictoryChart>
-                <VictoryLine 
-                    style={{
-                        data: { stroke: "#c43a31" },
-                        parent: { border: "1px solid #ccc", width: "10%"}
-                    }}
-                    data={[
-                        {x: 1, y: sevenDay[0].confirmed},
-                        {x: 2, y: sevenDay[1].confirmed},
-                        {x: 3, y: sevenDay[2].confirmed},
-                        {x: 4, y: sevenDay[3].confirmed},
-                        {x: 5, y: sevenDay[4].confirmed},
-                        {x: 6, y: sevenDay[5].confirmed},
-                        {x: 7, y: sevenDay[6].confirmed},
-                    ]}
-                    animate={{
-                        duration: 2000,
-                        onLoad: { duration: 1000 }
-                    }}
-                />
-            </VictoryChart>
+            <div>
+                <p>Confirmed Cases Over 7 Days for {this.props.county} County</p>
+                <VictoryChart>
+                    <VictoryLine
+                        style={{
+                            data: { stroke: "#c43a31" },
+                            parent: { border: "1px solid black", width: "10%"}
+                        }}
+                        data={[
+                            {x: sevenDay[0].date.substring(5, sevenDay[0].date.length), y: sevenDay[0].confirmed},
+                            {x: sevenDay[1].date.substring(5, sevenDay[1].date.length), y: sevenDay[1].confirmed},
+                            {x: sevenDay[2].date.substring(5, sevenDay[2].date.length), y: sevenDay[2].confirmed},
+                            {x: sevenDay[3].date.substring(5, sevenDay[3].date.length), y: sevenDay[3].confirmed},
+                            {x: sevenDay[4].date.substring(5, sevenDay[4].date.length), y: sevenDay[4].confirmed},
+                            {x: sevenDay[5].date.substring(5, sevenDay[5].date.length), y: sevenDay[5].confirmed},
+                            {x: sevenDay[6].date.substring(5, sevenDay[6].date.length), y: sevenDay[6].confirmed},
+                        ]}
+                        animate={{
+                            duration: 2000,
+                            onLoad: { duration: 1000 }
+                        }}
+                        domain={{
+                            y: [this.props.minConfirmed - 1000, this.props.maxConfirmed + 1000]
+                        }}
+                    />
+                </VictoryChart>
+            </div>
+        )
+    }
+}
+
+class VisualizeDeaths extends React.Component {
+    render() {
+        return(
+            <div>
+                <p>Deaths Over 7 Days for {this.props.county} County</p>
+                <VictoryChart>
+                    <VictoryLine
+                        style={{
+                            data: { stroke: "#c43a31" },
+                            parent: { border: "1px solid black", width: "10%"}
+                        }}
+                        data={[
+                            {x: sevenDay[0].date.substring(5, sevenDay[0].date.length), y: sevenDay[0].deaths},
+                            {x: sevenDay[1].date.substring(5, sevenDay[1].date.length), y: sevenDay[1].deaths},
+                            {x: sevenDay[2].date.substring(5, sevenDay[2].date.length), y: sevenDay[2].deaths},
+                            {x: sevenDay[3].date.substring(5, sevenDay[3].date.length), y: sevenDay[3].deaths},
+                            {x: sevenDay[4].date.substring(5, sevenDay[4].date.length), y: sevenDay[4].deaths},
+                            {x: sevenDay[5].date.substring(5, sevenDay[5].date.length), y: sevenDay[5].deaths},
+                            {x: sevenDay[6].date.substring(5, sevenDay[6].date.length), y: sevenDay[6].deaths},
+                        ]}
+                        animate={{
+                            duration: 2000,
+                            onLoad: { duration: 1000 }
+                        }}
+                        domain={{
+                            y: [this.props.minDeaths - 100, this.props.maxDeaths + 100]
+                        }}
+                    />
+                </VictoryChart>
+            </div>
         )
     }
 }
@@ -284,8 +355,8 @@ class WorldData extends React.Component {
             "url":"https://covid-19-statistics.p.rapidapi.com/reports/total",
             "headers":{
                 "content-type":"application/octet-stream",
-                "x-rapidapi-host":"",
-                "x-rapidapi-key":""
+                "x-rapidapi-host": "",
+                "x-rapidapi-key": ""
             },"params":{
                 "date":current
             }
@@ -338,7 +409,7 @@ class DisplayWorldData extends React.Component {
 
 function App() {
     return (
-        <Grid container>
+        <Grid container justify="center">
             <Grid item xs={12}>
                 <div class="main">
                     <div class="headers">

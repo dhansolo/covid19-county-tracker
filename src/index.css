@@ -28,12 +28,8 @@ html {
     left: 10px;
 }
 
-/* .info {
-    margin-top: 20%;
-} */
-
-#result {
-    margin-top: 8%;
+.info {
+    margin-top: 70px;
 }
 
 .info h3 {
@@ -53,7 +49,6 @@ html {
     position: fixed;
     left: 0;
     bottom: 0;
-    top: 85%;
     width: 100%;
     background-color: #B6D9EE;
     color: black;
