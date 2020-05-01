@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import './index.css';
 
+import * as moment from 'moment/moment';
+
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
@@ -15,9 +17,23 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import {VictoryChart, VictoryLine} from 'victory';
 
 // Create a date string in the format YYYY-MM-DD
-let date = new Date();
+// TODO: Set up proper date logic that handles all potential datetime events
+let date = moment().subtract(1, 'days');
 let current;
-let currentDate = date.getFullYear() + "-0" + (date.getMonth() + 1) + "-" + (date.getDate() - 1);
+let currentDate;
+if(date.month() + 1 < 10) {
+    if(date.date() < 10) {
+        currentDate = date.year() + "-0" + (date.month() + 1) + "-0" + date.date();
+    } else {
+        currentDate = date.year() + "-0" + (date.month() + 1) + "-" + date.date();
+    }
+} else {
+    if(date.date() < 10) {
+        currentDate = date.year() + "-" + (date.month() + 1) + "-0" + date.date();
+    } else {
+        currentDate = date.year() + "-" + (date.month() + 1) + "-" + date.date();
+    }
+}
 
 let sevenDay = [];
 let info = null;
@@ -26,6 +42,7 @@ let minConfirmed = null;
 let minDeaths = null;
 let maxConfirmed = null;
 let maxDeaths = null;
+
 
 class SearchAPI extends React.Component {
     constructor(props) {
@@ -42,6 +59,7 @@ class SearchAPI extends React.Component {
         this.handleSearchClick = this.handleSearchClick.bind(this);
     }
 
+    // Every keypress in the County input field will cause an update
     handleCountyChange(event) {
         if(event.target.value) {
             this.setState({
@@ -58,6 +76,7 @@ class SearchAPI extends React.Component {
         }
     }
 
+    // When a state is selected on the dropdown menu
     handleStateChange(event) {
         this.setState({
             state: event.target.value,
@@ -65,7 +84,9 @@ class SearchAPI extends React.Component {
         });
     }
 
+    // This is where all of the movement occurs
     async handleSearchClick() {
+        // Reset all necessary variables before you search again
         sevenDay = [];
         this.setState({ data: null});
         info = null;
@@ -73,6 +94,10 @@ class SearchAPI extends React.Component {
         minDeaths = null;
         maxConfirmed = null;
         maxDeaths = null;
+        let count = 0;
+
+        // API doesn't like the word 'county' so I'm reformatting the user's terms here to omit 'county'
+        // as well as adjusting the casing as the API likes exactness
         if(this.state.county === "" || this.state.state === "") { return; }
         let reformattedState = this.state.state[0].toUpperCase() + this.state.state.slice(1);
         let reformattedCounty = this.state.county.toLowerCase();
@@ -80,25 +105,37 @@ class SearchAPI extends React.Component {
             reformattedCounty = reformattedCounty.substring(0, reformattedCounty.indexOf("county") - 1);
         }
         reformattedCounty = reformattedCounty[0].toUpperCase() + reformattedCounty.slice(1);
-
         this.setState({ county: reformattedCounty, state: reformattedState, loading: true, notFound: false, data: null});  
-        let count = 0;
+
+        // Looping 7 times to get 7 days worth of data
         while(count < 7) {  
-            current = date.getFullYear() + "-0" + (date.getMonth() + 1) + "-" + (date.getDate() - count - 1);
-            // console.log(current);
+            date = moment().subtract(1 + count, 'days');
+            current = "";
+            if(date.month() + 1 < 10) {
+                if(date.date() < 10) {
+                    current = date.year() + "-0" + (date.month() + 1) + "-0" + date.date();
+                } else {
+                    current = date.year() + "-0" + (date.month() + 1) + "-" + date.date();
+                }
+            } else {
+                if(date.date() < 10) {
+                    current = date.year() + "-" + (date.month() + 1) + "-0" + date.date();
+                } else {
+                    current = date.year() + "-" + (date.month() + 1) + "-" + date.date();
+                }
+            }
             this.callAxios(current);
             count++;
         }
     }
 
+    // Function to make the Axios http request so that the above looks cleaner
     async callAxios(current) {
         return axios({
             "method":"GET",
             "url":"https://covid-19-statistics.p.rapidapi.com/reports",
             "headers":{
                 "content-type":"application/octet-stream",
-                "x-rapidapi-host": "",
-                "x-rapidapi-key": ""
             },
             "params":{
                 "region_province":this.state.state,
@@ -110,37 +147,39 @@ class SearchAPI extends React.Component {
             }
         })
         .then((response)=>{
-            //console.log(response);
             if(response.data.data.length > 0) {
+                // TODO: Set up proper date logic that handles all potential datetime events
                 if(current === currentDate) {
                     this.setState({ data: response.data.data[0].region.cities[0], notFound: false});
                 }
-                // console.log(response.data.data[0].region.cities[0].date);
-                if(response.data.data[0].region.cities[0].confirmed < minConfirmed || minConfirmed === null) { 
-                    minConfirmed = response.data.data[0].region.cities[0].confirmed; 
+                if(response.data.data[0].region.cities[0].confirmed_diff < minConfirmed || minConfirmed === null) { 
+                    minConfirmed = response.data.data[0].region.cities[0].confirmed_diff; 
                 }
-                if(response.data.data[0].region.cities[0].confirmed > maxConfirmed || maxConfirmed === null) { 
-                    maxConfirmed = response.data.data[0].region.cities[0].confirmed; 
+                if(response.data.data[0].region.cities[0].confirmed_diff > maxConfirmed || maxConfirmed === null) { 
+                    maxConfirmed = response.data.data[0].region.cities[0].confirmed_diff; 
                 }
-                if(response.data.data[0].region.cities[0].deaths < minDeaths || minDeaths === null) { 
-                    minDeaths = response.data.data[0].region.cities[0].deaths; 
+                if(response.data.data[0].region.cities[0].deaths_diff < minDeaths || minDeaths === null) { 
+                    minDeaths = response.data.data[0].region.cities[0].deaths_diff; 
                 }
-                if(response.data.data[0].region.cities[0].deaths > maxDeaths || maxDeaths === null) { 
-                    maxDeaths = response.data.data[0].region.cities[0].deaths; 
+                if(response.data.data[0].region.cities[0].deaths_diff > maxDeaths || maxDeaths === null) { 
+                    maxDeaths = response.data.data[0].region.cities[0].deaths_diff; 
                 }
+                // Push data into sevenDay array
                 sevenDay.push(
                     {
                         date: current,
-                        confirmed: response.data.data[0].region.cities[0].confirmed,
-                        deaths: response.data.data[0].region.cities[0].deaths
+                        confirmed: response.data.data[0].region.cities[0].confirmed_diff,
+                        deaths: response.data.data[0].region.cities[0].deaths_diff
                     }
                 )
+                // Sort it by date after every push
                 sevenDay.sort((a, b) => new Date(a.date) - new Date(b.date));
-                //console.log(sevenDay);
                 if(sevenDay.length === 7) {
+                    // Will not stop loading until there is exactly 7 items in the array
                     this.setState({ loading: false })
                 }
             } else {
+                // Search terms not found
                 this.setState({ data: null, notFound: true, loading: false});
             }
         })
@@ -154,6 +193,7 @@ class SearchAPI extends React.Component {
         let notfound;
         let loadImage;
         if(this.state.data && !this.state.loading) {
+            // Throwing everything to the Info component to render
             info = <Info 
                 confirmed={this.state.data.confirmed} 
                 deaths={this.state.data.deaths} 
@@ -171,6 +211,7 @@ class SearchAPI extends React.Component {
             <div>
                 <div class="search">
                     <TextField id="search-county" type="text" label="County" value={this.state.county} onChange={this.handleCountyChange}></TextField>
+                    {/* IS THERE NO BETTER WAY?  */}
                     <FormControl id="search-state">
                         <InputLabel>State</InputLabel>
                         <Select type="text" value={this.state.state} onChange={this.handleStateChange}>
@@ -240,8 +281,6 @@ class SearchAPI extends React.Component {
 
 class Info extends React.Component {
     render() {
-        // console.log("info rendering");
-        // console.log(visualizeConfirmed)
         let rate = (this.props.deaths/this.props.confirmed) * 100;
         return (
             <div>
@@ -268,7 +307,7 @@ class VisualizeConfirmed extends React.Component {
     render() {
         return(
             <div>
-                <p>Confirmed Cases Over 7 Days for {this.props.county} County</p>
+                <h4>Changes in Confirmed Cases Over 7 Days for {this.props.county} County</h4>
                 <VictoryChart>
                     <VictoryLine
                         style={{
@@ -289,7 +328,7 @@ class VisualizeConfirmed extends React.Component {
                             onLoad: { duration: 1000 }
                         }}
                         domain={{
-                            y: [this.props.minConfirmed - 100, this.props.maxConfirmed + 100]
+                            y: [0, this.props.maxConfirmed + 10]
                         }}
                     />
                 </VictoryChart>
@@ -302,7 +341,7 @@ class VisualizeDeaths extends React.Component {
     render() {
         return(
             <div>
-                <p>Deaths Over 7 Days for {this.props.county} County</p>
+                <h4>Deaths Over 7 Days for {this.props.county} County</h4>
                 <VictoryChart>
                     <VictoryLine
                         style={{
@@ -323,7 +362,7 @@ class VisualizeDeaths extends React.Component {
                             onLoad: { duration: 1000 }
                         }}
                         domain={{
-                            y: [this.props.minDeaths - 10, this.props.maxDeaths + 10]
+                            y: [0, this.props.maxDeaths + 10]
                         }}
                     />
                 </VictoryChart>
@@ -349,20 +388,13 @@ class WorldData extends React.Component {
         }
     }
     componentDidMount() {
-        if((date.getMonth() + 1) < 10) {
-            current = date.getFullYear() + "-0" + (date.getMonth() + 1) + "-" + (date.getDate() - 1);
-        } else {
-            current = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (date.getDate() - 1);
-        }
         axios({
             "method":"GET",
             "url":"https://covid-19-statistics.p.rapidapi.com/reports/total",
             "headers":{
                 "content-type":"application/octet-stream",
-                "x-rapidapi-host": "",
-                "x-rapidapi-key": ""
             },"params":{
-                "date":current
+                "date":currentDate
             }
             })
             .then((response)=>{
@@ -400,7 +432,6 @@ class LoadingScreen extends React.Component {
 
 class DisplayWorldData extends React.Component {
     render() {
-        // console.log(this.props.data);
         let rate = (this.props.data.fatality_rate * 100);
         return(
             <div>
@@ -411,6 +442,7 @@ class DisplayWorldData extends React.Component {
     }
 }
 
+// Do I want to have all components that need to render break into parts here instead of everything in SearchAPI?
 function App() {
     return (
         <Grid container justify="center">
@@ -429,37 +461,3 @@ function App() {
 }
 
 ReactDOM.render(<App />, document.getElementById("root"));
-
-/*
-current = date.getFullYear() + "-0" + (date.getMonth() + 1) + "-" + (date.getDate() - 1);
-axios({
-    "method":"GET",
-    "url":"https://covid-19-statistics.p.rapidapi.com/reports",
-    "headers":{
-        "content-type":"application/octet-stream",
-        "x-rapidapi-host":"",
-        "x-rapidapi-key":""
-    },
-    "params":{
-        "region_province":this.state.state,
-        "iso":"USA",
-        "region_name":"US",
-        "city_name":reformattedCounty,
-        "date":current,
-        "q":"US " + this.state.state
-    }
-})
-.then((response)=>{
-    // console.log(response);
-    if(response.data.data.length > 0) {
-        this.setState({ data: response.data.data[0].region.cities[0], notFound: false, loading: false});
-        confirmed = this.state.data.confirmed;
-        deaths = this.state.data.deaths;
-    } else {
-        this.setState({ data: null, notFound: true, loading: false });
-    }
-})
-.catch((error)=>{
-    console.log(error);
-}) 
-*/
