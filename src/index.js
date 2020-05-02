@@ -17,7 +17,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import {VictoryChart, VictoryLine, VictoryScatter} from 'victory';
 
 // Create a date string in the format YYYY-MM-DD
-// TODO: Set up proper date logic that handles all potential datetime events
 let date = moment().subtract(1, 'days');
 let current;
 let currentDate;
@@ -148,7 +147,6 @@ class CountyData extends React.Component {
         })
         .then((response)=>{
             if(response.data.data.length > 0) {
-                // TODO: Set up proper date logic that handles all potential datetime events
                 if(current === currentDate) {
                     this.setState({ data: response.data.data[0].region.cities[0], notFound: false});
                 }
@@ -179,7 +177,7 @@ class CountyData extends React.Component {
                     this.setState({ loading: false })
                 }
             } else {
-                // Search terms not found
+                // Data not found
                 this.setState({ data: null, notFound: true, loading: false});
             }
         })
@@ -211,7 +209,6 @@ class CountyData extends React.Component {
             <div>
                 <div class="search">
                     <TextField id="search-county" type="text" label="County" value={this.state.county} onChange={this.handleCountyChange}></TextField>
-                    {/* IS THERE NO BETTER WAY?  */}
                     <FormControl id="search-state">
                         <InputLabel>State</InputLabel>
                         <Select type="text" value={this.state.state} onChange={this.handleStateChange}>
