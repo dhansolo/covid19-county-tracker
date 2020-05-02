@@ -6,6 +6,7 @@ html {
     font-family: "Roboto", sans-serif;
     text-align: center;
     color: black;
+    margin-top: 160px;
 }
 
 .search {
@@ -37,7 +38,7 @@ html {
 }
 
 .headers h1 {
-    color: #B6D9EE;
+    color: white;
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
@@ -48,7 +49,19 @@ html {
 .world-data {
     position: fixed;
     left: 0;
-    bottom: 0;
+    top: 0px;
+    width: 100%;
+    background-color: lightcoral;
+    color: black;
+    text-align: center;
+    z-index: 1;
+    border-radius: 0px 0px 10px 10px;
+}
+
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0px;
     width: 100%;
     background-color: #B6D9EE;
     color: black;

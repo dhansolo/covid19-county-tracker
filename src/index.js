@@ -14,7 +14,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import {VictoryChart, VictoryLine} from 'victory';
+import {VictoryChart, VictoryLine, VictoryScatter} from 'victory';
 
 // Create a date string in the format YYYY-MM-DD
 // TODO: Set up proper date logic that handles all potential datetime events
@@ -335,6 +335,28 @@ class VisualizeConfirmed extends React.Component {
                             y: [0, this.props.maxConfirmed + 10]
                         }}
                     />
+                    <VictoryScatter
+                        data={[
+                            {x: sevenDay[0].date.substring(5, sevenDay[0].date.length), y: sevenDay[0].confirmed},
+                            {x: sevenDay[1].date.substring(5, sevenDay[1].date.length), y: sevenDay[1].confirmed},
+                            {x: sevenDay[2].date.substring(5, sevenDay[2].date.length), y: sevenDay[2].confirmed},
+                            {x: sevenDay[3].date.substring(5, sevenDay[3].date.length), y: sevenDay[3].confirmed},
+                            {x: sevenDay[4].date.substring(5, sevenDay[4].date.length), y: sevenDay[4].confirmed},
+                            {x: sevenDay[5].date.substring(5, sevenDay[5].date.length), y: sevenDay[5].confirmed},
+                            {x: sevenDay[6].date.substring(5, sevenDay[6].date.length), y: sevenDay[6].confirmed, label: recentLabel},
+                        ]}
+                        animate={{
+                            duration: 2000,
+                            opacity: 0.0,
+                            onLoad: { 
+                                duration: 1000,
+                                opacity: 1.0
+                            },
+                        }}
+                        domain={{
+                            y: [0, this.props.maxConfirmed + 10]
+                        }}
+                    />
                 </VictoryChart>
             </div>
         )
@@ -354,6 +376,29 @@ class VisualizeDeaths extends React.Component {
                             data: { stroke: "#c43a31" },
                             parent: { border: "1px solid black", width: "10%"}
                         }}
+                        data={[
+                            {x: sevenDay[0].date.substring(5, sevenDay[0].date.length), y: sevenDay[0].deaths},
+                            {x: sevenDay[1].date.substring(5, sevenDay[1].date.length), y: sevenDay[1].deaths},
+                            {x: sevenDay[2].date.substring(5, sevenDay[2].date.length), y: sevenDay[2].deaths},
+                            {x: sevenDay[3].date.substring(5, sevenDay[3].date.length), y: sevenDay[3].deaths},
+                            {x: sevenDay[4].date.substring(5, sevenDay[4].date.length), y: sevenDay[4].deaths},
+                            {x: sevenDay[5].date.substring(5, sevenDay[5].date.length), y: sevenDay[5].deaths},
+                            {x: sevenDay[6].date.substring(5, sevenDay[6].date.length), y: sevenDay[6].deaths, label: recentLabel},
+                        ]}
+                        animate={{
+                            duration: 2000,
+                            opacity: 0.0,
+                            onLoad: { 
+                                duration: 1000,
+                                opacity: 1.0
+                            },
+
+                        }}
+                        domain={{
+                            y: [0, this.props.maxDeaths + 5]
+                        }}
+                    />
+                    <VictoryScatter
                         data={[
                             {x: sevenDay[0].date.substring(5, sevenDay[0].date.length), y: sevenDay[0].deaths},
                             {x: sevenDay[1].date.substring(5, sevenDay[1].date.length), y: sevenDay[1].deaths},
@@ -472,8 +517,9 @@ function App() {
                         <h1>COVID-19 County Tracker</h1>
                         <h4>Data as of {currentDate}</h4>
                     </div>
+                    <header class="world-data"><WorldData /></header>
                     <div class="search"><CountyData /></div>
-                    <footer class="world-data"><WorldData /></footer>
+                    <footer>Created by <a href="https://www.linkedin.com/in/davidhan93/">David Han</a> | <a href="https://rapidapi.com/axisbits-axisbits-default/api/covid-19-statistics">Data</a> provided by John Hopkins University</footer>
                 </div>
             </Grid>
         </Grid>
