@@ -1,4 +1,4 @@
-<h1>Tool to view COVID-19 statistics on a County level.</h1>
+<h1>COVID-19 County Tracker</h1>
 
 <h3>Steps to run:</h3>
 
