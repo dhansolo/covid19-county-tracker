@@ -288,9 +288,7 @@ class Info extends React.Component {
                     <div class="info">
                         <Grid item xs={12}>
                             <h3>Statistics for {this.props.county} County, {this.props.state}</h3>
-                            <h4>Confirmed: {this.props.confirmed}</h4>
-                            <h4>Fatalities: {this.props.deaths}</h4>
-                            <h4>Approximate Fatality Rate: {rate.toFixed(3)}%</h4>
+                            <p>Confirmed: {this.props.confirmed} | Fatalities: {this.props.deaths} | Approximate Fatality Rate: {rate.toFixed(3)}%</p>
                         </Grid>
                         <Grid container>
                                 <VisualizeConfirmed county={this.props.county} minConfirmed={this.props.minConfirmed} maxConfirmed={this.props.maxConfirmed}/>
@@ -305,11 +303,13 @@ class Info extends React.Component {
 
 class VisualizeConfirmed extends React.Component {
     render() {
+        let recentLabel = Math.abs(sevenDay[6].confirmed) + " new cases";
         return(
             <div>
                 <h4>Changes in Confirmed Cases Over 7 Days for {this.props.county} County</h4>
                 <VictoryChart>
                     <VictoryLine
+                        interpolation="natural"
                         style={{
                             data: { stroke: "#c43a31" },
                             parent: { border: "1px solid black", width: "10%"}
@@ -321,11 +321,15 @@ class VisualizeConfirmed extends React.Component {
                             {x: sevenDay[3].date.substring(5, sevenDay[3].date.length), y: sevenDay[3].confirmed},
                             {x: sevenDay[4].date.substring(5, sevenDay[4].date.length), y: sevenDay[4].confirmed},
                             {x: sevenDay[5].date.substring(5, sevenDay[5].date.length), y: sevenDay[5].confirmed},
-                            {x: sevenDay[6].date.substring(5, sevenDay[6].date.length), y: sevenDay[6].confirmed},
+                            {x: sevenDay[6].date.substring(5, sevenDay[6].date.length), y: sevenDay[6].confirmed, label: recentLabel},
                         ]}
                         animate={{
                             duration: 2000,
-                            onLoad: { duration: 1000 }
+                            opacity: 0.0,
+                            onLoad: { 
+                                duration: 1000,
+                                opacity: 1.0
+                            },
                         }}
                         domain={{
                             y: [0, this.props.maxConfirmed + 10]
@@ -339,11 +343,13 @@ class VisualizeConfirmed extends React.Component {
 
 class VisualizeDeaths extends React.Component {
     render() {
+        let recentLabel = Math.abs(sevenDay[6].deaths) + " new fatalities";
         return(
             <div>
-                <h4>Number of Deaths Over 7 Days for {this.props.county} County</h4>
+                <h4>Number of Fatalities Over 7 Days for {this.props.county} County</h4>
                 <VictoryChart>
                     <VictoryLine
+                        interpolation="natural"
                         style={{
                             data: { stroke: "#c43a31" },
                             parent: { border: "1px solid black", width: "10%"}
@@ -355,15 +361,19 @@ class VisualizeDeaths extends React.Component {
                             {x: sevenDay[3].date.substring(5, sevenDay[3].date.length), y: sevenDay[3].deaths},
                             {x: sevenDay[4].date.substring(5, sevenDay[4].date.length), y: sevenDay[4].deaths},
                             {x: sevenDay[5].date.substring(5, sevenDay[5].date.length), y: sevenDay[5].deaths},
-                            {x: sevenDay[6].date.substring(5, sevenDay[6].date.length), y: sevenDay[6].deaths},
+                            {x: sevenDay[6].date.substring(5, sevenDay[6].date.length), y: sevenDay[6].deaths, label: recentLabel},
                         ]}
                         animate={{
                             duration: 2000,
-                            onLoad: { duration: 1000 },
+                            opacity: 0.0,
+                            onLoad: { 
+                                duration: 1000,
+                                opacity: 1.0
+                            },
 
                         }}
                         domain={{
-                            y: [0, this.props.maxDeaths + 10]
+                            y: [0, this.props.maxDeaths + 5]
                         }}
                     />
                 </VictoryChart>
