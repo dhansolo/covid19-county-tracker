@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "bc543a01f347e604dc210acae7662b5d",
+    "revision": "9357f648ee0a4576bd26f5cd56c77f8d",
     "url": "/covid19-county-tracker/index.html"
   },
   {
-    "revision": "eb8d21d3e38cd88ce89c",
+    "revision": "04e6daf1a6b29c3eb28a",
     "url": "/covid19-county-tracker/static/css/main.7a072cab.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/covid19-county-tracker/static/js/2.ee533692.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "eb8d21d3e38cd88ce89c",
-    "url": "/covid19-county-tracker/static/js/main.ff621559.chunk.js"
+    "revision": "04e6daf1a6b29c3eb28a",
+    "url": "/covid19-county-tracker/static/js/main.e2e43875.chunk.js"
   },
   {
     "revision": "e1698a11be7e5f797c0f",
