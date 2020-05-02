@@ -44,7 +44,7 @@ let maxConfirmed = null;
 let maxDeaths = null;
 
 
-class SearchAPI extends React.Component {
+class CountyData extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -65,13 +65,13 @@ class SearchAPI extends React.Component {
             this.setState({
                 county: event.target.value,
                 data: null,
-                loading: false
+                notFound: false
             });
         } else if(event.target.value === "") {
             this.setState({
                 county: "",
                 data: null,
-                loading: false
+                notFound: false
             });
         }
     }
@@ -80,12 +80,14 @@ class SearchAPI extends React.Component {
     handleStateChange(event) {
         this.setState({
             state: event.target.value,
-            data: null
+            data: null,
+            notFound: false
         });
     }
 
     // This is where all of the movement occurs
     async handleSearchClick() {
+        if(this.state.county === "" || this.state.state === "") { return; }
         // Reset all necessary variables before you search again
         sevenDay = [];
         this.setState({ data: null});
@@ -96,17 +98,7 @@ class SearchAPI extends React.Component {
         maxDeaths = null;
         let count = 0;
 
-        // API doesn't like the word 'county' so I'm reformatting the user's terms here to omit 'county'
-        // as well as adjusting the casing as the API likes exactness
-        if(this.state.county === "" || this.state.state === "") { return; }
-        let reformattedState = this.state.state[0].toUpperCase() + this.state.state.slice(1);
-        let reformattedCounty = this.state.county.toLowerCase();
-        if(reformattedCounty.includes("county")) {
-            reformattedCounty = reformattedCounty.substring(0, reformattedCounty.indexOf("county") - 1);
-        }
-        reformattedCounty = reformattedCounty[0].toUpperCase() + reformattedCounty.slice(1);
-        this.setState({ county: reformattedCounty, state: reformattedState, loading: true, notFound: false, data: null});  
-
+        this.setState({ county: this.state.county, loading: true, notFound: false, data: null}); 
         // Looping 7 times to get 7 days worth of data
         while(count < 7) {  
             date = moment().subtract(1 + count, 'days');
@@ -131,17 +123,25 @@ class SearchAPI extends React.Component {
 
     // Function to make the Axios http request so that the above looks cleaner
     async callAxios(current) {
+        // API doesn't like the word 'county' so I'm reformatting the user's terms here to omit 'county'
+        // as well as adjusting the casing as the API likes exactness
+        let reformattedCounty = this.state.county
+        if(reformattedCounty.includes("county")) {
+            reformattedCounty = reformattedCounty.substring(0, reformattedCounty.indexOf("county") - 1);
+        }
         return axios({
             "method":"GET",
             "url":"https://covid-19-statistics.p.rapidapi.com/reports",
             "headers":{
                 "content-type":"application/octet-stream",
+                "x-rapidapi-host": process.env.REACT_APP_HOST,
+                "x-rapidapi-key": process.env.REACT_APP_API_KEY
             },
             "params":{
                 "region_province":this.state.state,
                 "iso":"USA",
                 "region_name":"US",
-                "city_name":this.state.county,
+                "city_name":reformattedCounty,
                 "date":current,
                 "q":"US " + this.state.state
             }
@@ -190,14 +190,12 @@ class SearchAPI extends React.Component {
     }
 
     render() {
-        let notfound;
-        let loadImage;
         if(this.state.data && !this.state.loading) {
             // Throwing everything to the Info component to render
             info = <Info 
                 confirmed={this.state.data.confirmed} 
                 deaths={this.state.data.deaths} 
-                county={this.state.county} 
+                county={this.state.data.name} 
                 state={this.state.state} 
                 minConfirmed={minConfirmed} 
                 minDeaths={minDeaths}
@@ -205,6 +203,8 @@ class SearchAPI extends React.Component {
                 maxDeaths={maxDeaths}
                 />;
         }
+        let loadImage = null;
+        let notfound = null;
         if(this.state.loading) {loadImage = <LoadingScreen />}
         if(this.state.notFound) {notfound = <NotFound />}
         return (
@@ -341,7 +341,7 @@ class VisualizeDeaths extends React.Component {
     render() {
         return(
             <div>
-                <h4>Deaths Over 7 Days for {this.props.county} County</h4>
+                <h4>Number of Deaths Over 7 Days for {this.props.county} County</h4>
                 <VictoryChart>
                     <VictoryLine
                         style={{
@@ -359,7 +359,8 @@ class VisualizeDeaths extends React.Component {
                         ]}
                         animate={{
                             duration: 2000,
-                            onLoad: { duration: 1000 }
+                            onLoad: { duration: 1000 },
+
                         }}
                         domain={{
                             y: [0, this.props.maxDeaths + 10]
@@ -374,7 +375,15 @@ class VisualizeDeaths extends React.Component {
 class NotFound extends React.Component {
     render() {
         return (
-            <div class="info">No data found, are you sure you entered the correct County and State?</div>
+            <div class="info">
+                <p>
+                No data found, are you sure you entered the correct County and State?
+                </p>
+                <p>
+                Please note that data from John Hopkins University may contain some
+                discrepencies.
+                </p>
+            </div>
         )
     }
 }
@@ -393,6 +402,8 @@ class WorldData extends React.Component {
             "url":"https://covid-19-statistics.p.rapidapi.com/reports/total",
             "headers":{
                 "content-type":"application/octet-stream",
+                "x-rapidapi-host": process.env.REACT_APP_HOST,
+                "x-rapidapi-key": process.env.REACT_APP_API_KEY
             },"params":{
                 "date":currentDate
             }
@@ -442,7 +453,6 @@ class DisplayWorldData extends React.Component {
     }
 }
 
-// Do I want to have all components that need to render break into parts here instead of everything in SearchAPI?
 function App() {
     return (
         <Grid container justify="center">
@@ -452,7 +462,7 @@ function App() {
                         <h1>COVID-19 County Tracker</h1>
                         <h4>Data as of {currentDate}</h4>
                     </div>
-                    <div class="search"><SearchAPI /></div>
+                    <div class="search"><CountyData /></div>
                     <footer class="world-data"><WorldData /></footer>
                 </div>
             </Grid>
