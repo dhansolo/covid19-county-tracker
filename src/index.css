@@ -21,7 +21,7 @@ html {
 
 #search-county {
     text-align: center;
-    width: 140px;
+    width: 125px;
     right: 10px;
     background-color: white;
     border-radius: 10px 10px 10px 10px;
@@ -53,8 +53,9 @@ html {
 
 .headers h1 {
     color: white;
-    font-family: "Permanent Marker", sans-serif;
+    font-family: "Jost", sans-serif;
     font-style: italic;
+    margin-bottom: 5px;
     /* text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; */
 }
 
@@ -68,10 +69,31 @@ html {
     top: 0px;
     width: 100%;
     background-color: lightcoral;
-    color: black;
+    color: white;
     text-align: center;
     z-index: 100;
     border-radius: 0px 0px 10px 10px;
+}
+
+#world-confirmed {
+    background-color: yellow;
+}
+
+#world-recovered {
+    background-color: green;
+}
+
+#world-deaths {
+    background-color: red;
+}
+
+#world-rate {
+    background: lightblue;
+}
+
+#date-chip {
+    background: red;
+    margin-bottom: 5px;
 }
 
 footer {

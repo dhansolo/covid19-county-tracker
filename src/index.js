@@ -605,27 +605,33 @@ class DisplayWorldData extends React.Component {
         let rate = (this.props.data.fatality_rate * 100);
         return(
             <div>
-                <h4>World Statistics</h4>
-                <p>Confirmed: {numberWithCommas(this.props.data.confirmed)} | Recovered: {numberWithCommas(this.props.data.recovered)} | Fatalities: {numberWithCommas(this.props.data.deaths)} | Approximate Fatality Rate: {rate.toFixed(3)}%</p>
+                <h3>World Statistics</h3>
+                <p>
+                    <Chip id="world-confirmed" label={"Confirmed: " + numberWithCommas(this.props.data.confirmed)}></Chip>
+                    <Chip id="world-recovered" label={"Recovered: " + numberWithCommas(this.props.data.recovered)}></Chip>
+                    <Chip id="world-deaths" label={"Fatalities: " + numberWithCommas(this.props.data.deaths)}></Chip>
+                    <Chip id="world-rate" label={"Approximate Fatality Rate: " + rate.toFixed(3) + "%"}></Chip>
+                </p>
             </div>
         )
     }
 }
 
 function App() {
+    let date = moment().subtract(1, 'days').format("MMMM DD, YYYY")
     return (
         <Grid container justify="center">
             <Grid item xs={12}>
                 <div class="main">
                     <div class="headers">
                         <h1>COVID-19 County Tracker</h1>
-                        <h4>Data as of {moment().subtract(1, 'days').format("MMMM DD, YYYY")}</h4>
+                        <Chip id="date-chip" label={"Data as of " + date}></Chip>
                     </div>
                     <header class="world-data"><WorldData /></header>
                     <div class="search"><CountyData /></div>
                     <footer>
                         <Link href="https://www.linkedin.com/in/davidhan93/"><Chip id="chip" avatar={<Avatar>DH</Avatar>} label="Created by David Han" clickable></Chip></Link>
-                        <Chip id="chip" href="https://rapidapi.com/axisbits-axisbits-default/api/covid-19-statistics" label="Data provided by John Hopkins University"></Chip>
+                        <Chip id="chip" label="Data provided by John Hopkins University"></Chip>
                     </footer>
                 </div>
             </Grid>
