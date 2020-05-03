@@ -211,7 +211,7 @@ class CountyData extends React.Component {
         }
         let loadImage = null;
         let notfound = null;
-        if(this.state.loading) {loadImage = <LoadingScreen />}
+        if(this.state.loading) {loadImage = <LoadingScreen id="loading"/>}
         if(this.state.notFound) {notfound = <NotFound />}
         return (
             <div>
@@ -272,8 +272,8 @@ class CountyData extends React.Component {
                             <MenuItem value="Wyoming">Wyoming</MenuItem>
                         </Select>
                     </FormControl>
+                    <Button id="search-button" variant="contained" color="secondary" onClick={this.handleSearchClick}>Search</Button>
                 </div>
-                <Button id="search-button" variant="outlined" color="secondary" onClick={this.handleSearchClick}>Search</Button>
                 <div id="result">
                     {info}
                     {loadImage}
@@ -301,7 +301,7 @@ class Info extends React.Component {
                                 <p><b>Confirmed:</b> {this.props.confirmed} | <b>Fatalities:</b> {this.props.deaths} | <b>Approximate Fatality Rate:</b> {rate.toFixed(3)}%</p>
                             </Paper>
                         </Grid>
-                        <Grid container>
+                        <Grid container justify="center">
                                 <Paper id="visualize-confirmed" variant='elevation' elevation={24}><VisualizeConfirmed county={this.props.county} minConfirmed={this.props.minConfirmed} maxConfirmed={this.props.maxConfirmed}/></Paper>
                                 <Paper id="visualize-deaths" variant='elevation' elevation={24}><VisualizeDeaths county={this.props.county} minDeaths={this.props.minDeaths} maxDeaths={this.props.maxDeaths}/></Paper>
                         </Grid>
@@ -405,7 +405,7 @@ class VisualizeConfirmed extends React.Component {
                     domain={{
                         y: [0, this.props.maxConfirmed + 50]
                     }}
-                    size={5}
+                    size={6}
                     labels={({ datum }) => `${datum.y}`}
                     labelComponent={<VictoryTooltip dy={0}/>}
                 />
@@ -517,7 +517,7 @@ class VisualizeDeaths extends React.Component {
                         domain={{
                             y: [0, this.props.maxDeaths]
                         }}
-                        size={5}
+                        size={6}
                         labels={({ datum }) => `${datum.y}`}
                         labelComponent={<VictoryTooltip dy={0}/>}
                     />
@@ -623,9 +623,9 @@ function App() {
         <Grid container justify="center">
             <Grid item xs={12}>
                 <div class="main">
+                    <Chip id="date-chip" label={"Data as of " + date}></Chip>
                     <div class="headers">
                         <h1>COVID-19 County Tracker</h1>
-                        <Chip id="date-chip" label={"Data as of " + date}></Chip>
                     </div>
                     <header class="world-data"><WorldData /></header>
                     <div class="search"><CountyData /></div>

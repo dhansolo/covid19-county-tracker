@@ -15,8 +15,10 @@ html {
     color: white;
 }
 
-.search #loading {
-    margin: 20px;
+#search-button {
+    margin: 10px 10px 10px 20px;
+    background: lightblue;
+    color: black;
 }
 
 #search-county {
@@ -60,10 +62,6 @@ html {
     /* text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; */
 }
 
-.headers h4 {
-    color: red;
-}
-
 .world-data {
     position: fixed;
     left: 0;
@@ -94,7 +92,6 @@ html {
 
 #date-chip {
     background: red;
-    margin-bottom: 5px;
 }
 
 footer {
