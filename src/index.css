@@ -1,32 +1,38 @@
 html {
-    background-color: lightgray;
+    background-color: #1A1A1D;
+    color: white;
 }
 
 .main {
     font-family: "Roboto", sans-serif;
     text-align: center;
-    color: black;
+    color: white;
     margin-top: 160px;
 }
 
 .search {
     margin: 10px;
+    color: white;
 }
 
-.serach #loading {
-    margin: 20%;
+.search #loading {
+    margin: 20px;
 }
 
 #search-county {
     text-align: center;
     width: 150px;
     right: 10px;
+    background-color: white;
+    border-radius: 10px 10px 10px 10px;
 }
 
 #search-state {
     text-align: center;
     width: 150px;
     left: 10px;
+    background-color: white;
+    border-radius: 10px 10px 10px 10px;
 }
 
 #result {
@@ -48,7 +54,8 @@ html {
 
 .headers h1 {
     color: white;
-    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    font-style: italic;
+    /* text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; */
 }
 
 .headers h4 {
@@ -75,4 +82,5 @@ footer {
     background-color: #B6D9EE;
     color: black;
     text-align: center;
+    border-radius: 10px 10px 0px 0px;
 }
