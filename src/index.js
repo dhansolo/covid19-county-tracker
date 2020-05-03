@@ -295,17 +295,15 @@ class Info extends React.Component {
                 <Grid container justify="center">
                     <div class="info">
                         {/* <div>Graphs are draggable to the left and right. Hovering over points will show the exact numbers.</div> */}
-                        <Grid item xs={12}>
-                            <Paper variant='elevation' elevation={24}>
-                                <h3>Statistics for {this.props.county} {type}, {this.props.state}</h3>
-                                <p><b>Confirmed:</b> {this.props.confirmed} | <b>Fatalities:</b> {this.props.deaths} | <b>Approximate Fatality Rate:</b> {rate.toFixed(3)}%</p>
-                            </Paper>
-                        </Grid>
-                        <Grid container justify="center">
-                                <Paper id="visualize-confirmed" variant='elevation' elevation={24}><VisualizeConfirmed county={this.props.county} minConfirmed={this.props.minConfirmed} maxConfirmed={this.props.maxConfirmed}/></Paper>
-                                <Paper id="visualize-deaths" variant='elevation' elevation={24}><VisualizeDeaths county={this.props.county} minDeaths={this.props.minDeaths} maxDeaths={this.props.maxDeaths}/></Paper>
-                        </Grid>
+                        <Paper variant='elevation' elevation={24}>
+                            <h3>Statistics for {this.props.county} {type}, {this.props.state}</h3>
+                            <p><b>Confirmed:</b> {this.props.confirmed} | <b>Fatalities:</b> {this.props.deaths} | <b>Approximate Fatality Rate:</b> {rate.toFixed(3)}%</p>
+                        </Paper>
                     </div>
+                </Grid>
+                <Grid container justify="center">
+                    <Paper id="visualize-confirmed" variant='elevation' elevation={24}><VisualizeConfirmed county={this.props.county} minConfirmed={this.props.minConfirmed} maxConfirmed={this.props.maxConfirmed}/></Paper>
+                    <Paper id="visualize-deaths" variant='elevation' elevation={24}><VisualizeDeaths county={this.props.county} minDeaths={this.props.minDeaths} maxDeaths={this.props.maxDeaths}/></Paper>
                 </Grid>
             </div>
         )  
