@@ -37,6 +37,7 @@ html {
 
 #result {
     margin-top: 0px;
+    margin-bottom: 70px;
 }
 
 .info h3 {
@@ -100,13 +101,14 @@ footer {
     position: fixed;
     left: 0;
     bottom: 0px;
+    padding-top: 100px;
     width: 100%;
     color: black;
     text-align: center;
 }
 
 #chip {
-    background-color: #B6D9EE;
+    background-color: lightgray;
     margin-left: 5px;
     margin-right: 5px;
     margin-bottom: 10px;
