@@ -12,9 +12,10 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import {VictoryChart, VictoryLine, VictoryScatter} from 'victory';
+import {VictoryChart, VictoryZoomContainer, VictoryTooltip, VictoryLine, VictoryScatter} from 'victory';
 
 // Create a date string in the format YYYY-MM-DD
 let date = moment().subtract(1, 'days');
@@ -34,7 +35,7 @@ if(date.month() + 1 < 10) {
     }
 }
 
-let sevenDay = [];
+let thirtyDayArray = [];
 let info = null;
 
 let minConfirmed = null;
@@ -85,10 +86,10 @@ class CountyData extends React.Component {
     }
 
     // This is where all of the movement occurs
-    async handleSearchClick() {
+    handleSearchClick() {
         if(this.state.county === "" || this.state.state === "") { return; }
         // Reset all necessary variables before you search again
-        sevenDay = [];
+        thirtyDayArray = [];
         this.setState({ data: null});
         info = null;
         minConfirmed = null;
@@ -99,7 +100,7 @@ class CountyData extends React.Component {
 
         this.setState({ county: this.state.county, loading: true, notFound: false, data: null}); 
         // Looping 7 times to get 7 days worth of data
-        while(count < 7) {  
+        while(count < 30) {  
             date = moment().subtract(1 + count, 'days');
             current = "";
             if(date.month() + 1 < 10) {
@@ -121,12 +122,16 @@ class CountyData extends React.Component {
     }
 
     // Function to make the Axios http request so that the above looks cleaner
-    async callAxios(current) {
+    callAxios(current) {
         // API doesn't like the word 'county' so I'm reformatting the user's terms here to omit 'county'
         // as well as adjusting the casing as the API likes exactness
-        let reformattedCounty = this.state.county
+        let reformattedCounty = this.state.county.toLowerCase();
         if(reformattedCounty.includes("county")) {
             reformattedCounty = reformattedCounty.substring(0, reformattedCounty.indexOf("county") - 1);
+        } else if(reformattedCounty.includes("borough")) {
+            reformattedCounty = reformattedCounty.substring(0, reformattedCounty.indexOf("borough") - 1);
+        } else if(reformattedCounty.includes("parish")) {
+            reformattedCounty = reformattedCounty.substring(0, reformattedCounty.indexOf("parish") - 1);
         }
         return axios({
             "method":"GET",
@@ -162,8 +167,8 @@ class CountyData extends React.Component {
                 if(response.data.data[0].region.cities[0].deaths_diff > maxDeaths || maxDeaths === null) { 
                     maxDeaths = response.data.data[0].region.cities[0].deaths_diff; 
                 }
-                // Push data into sevenDay array
-                sevenDay.push(
+                // Push data into thirtyDayArray array
+                thirtyDayArray.push(
                     {
                         date: current,
                         confirmed: response.data.data[0].region.cities[0].confirmed_diff,
@@ -171,8 +176,8 @@ class CountyData extends React.Component {
                     }
                 )
                 // Sort it by date after every push
-                sevenDay.sort((a, b) => new Date(a.date) - new Date(b.date));
-                if(sevenDay.length === 7) {
+                thirtyDayArray.sort((a, b) => new Date(a.date) - new Date(b.date));
+                if(thirtyDayArray.length === 30) {
                     // Will not stop loading until there is exactly 7 items in the array
                     this.setState({ loading: false })
                 }
@@ -208,8 +213,8 @@ class CountyData extends React.Component {
         return (
             <div>
                 <div class="search">
-                    <TextField id="search-county" type="text" label="County" value={this.state.county} onChange={this.handleCountyChange}></TextField>
-                    <FormControl id="search-state">
+                    <TextField id="search-county" type="text" label="County" variant="filled" value={this.state.county} onChange={this.handleCountyChange}></TextField>
+                    <FormControl variant="filled" id="search-state">
                         <InputLabel>State</InputLabel>
                         <Select type="text" value={this.state.state} onChange={this.handleStateChange}>
                             <MenuItem value="Alabama">Alabama</MenuItem>
@@ -265,7 +270,7 @@ class CountyData extends React.Component {
                         </Select>
                     </FormControl>
                 </div>
-                <Button id="search-button" variant="outlined" size="small" onClick={this.handleSearchClick}>Search</Button>
+                <Button id="search-button" variant="outlined" color="secondary" onClick={this.handleSearchClick}>Search</Button>
                 <div id="result">
                     {info}
                     {loadImage}
@@ -279,17 +284,23 @@ class CountyData extends React.Component {
 class Info extends React.Component {
     render() {
         let rate = (this.props.deaths/this.props.confirmed) * 100;
+        let type = 'County';
+        if(this.props.state === "Alaska") { type = "Borough"}
+        if(this.props.state === "Louisiana") { type = "Parish"}
         return (
             <div>
                 <Grid container justify="center">
                     <div class="info">
+                        {/* <div>Graphs are draggable to the left and right. Hovering over points will show the exact numbers.</div> */}
                         <Grid item xs={12}>
-                            <h3>Statistics for {this.props.county} County, {this.props.state}</h3>
-                            <p>Confirmed: {this.props.confirmed} | Fatalities: {this.props.deaths} | Approximate Fatality Rate: {rate.toFixed(3)}%</p>
+                            <Paper variant='elevation' elevation={24}>
+                                <h3>Statistics for {this.props.county} {type}, {this.props.state}</h3>
+                                <p><b>Confirmed:</b> {this.props.confirmed} | <b>Fatalities:</b> {this.props.deaths} | <b>Approximate Fatality Rate:</b> {rate.toFixed(3)}%</p>
+                            </Paper>
                         </Grid>
                         <Grid container>
-                                <VisualizeConfirmed county={this.props.county} minConfirmed={this.props.minConfirmed} maxConfirmed={this.props.maxConfirmed}/>
-                                <VisualizeDeaths county={this.props.county} minDeaths={this.props.minDeaths} maxDeaths={this.props.maxDeaths}/>
+                                <Paper id="visualize-confirmed" variant='elevation' elevation={24}><VisualizeConfirmed county={this.props.county} minConfirmed={this.props.minConfirmed} maxConfirmed={this.props.maxConfirmed}/></Paper>
+                                <Paper id="visualize-deaths" variant='elevation' elevation={24}><VisualizeDeaths county={this.props.county} minDeaths={this.props.minDeaths} maxDeaths={this.props.maxDeaths}/></Paper>
                         </Grid>
                     </div>
                 </Grid>
@@ -300,60 +311,101 @@ class Info extends React.Component {
 
 class VisualizeConfirmed extends React.Component {
     render() {
-        let recentLabel = Math.abs(sevenDay[6].confirmed) + " new cases";
         return(
             <div>
-                <h4>Changes in Confirmed Cases Over 7 Days for {this.props.county} County</h4>
-                <VictoryChart>
-                    <VictoryLine
-                        interpolation="natural"
-                        style={{
-                            data: { stroke: "#c43a31" },
-                            parent: { border: "1px solid black", width: "10%"}
-                        }}
-                        data={[
-                            {x: sevenDay[0].date.substring(5, sevenDay[0].date.length), y: sevenDay[0].confirmed},
-                            {x: sevenDay[1].date.substring(5, sevenDay[1].date.length), y: sevenDay[1].confirmed},
-                            {x: sevenDay[2].date.substring(5, sevenDay[2].date.length), y: sevenDay[2].confirmed},
-                            {x: sevenDay[3].date.substring(5, sevenDay[3].date.length), y: sevenDay[3].confirmed},
-                            {x: sevenDay[4].date.substring(5, sevenDay[4].date.length), y: sevenDay[4].confirmed},
-                            {x: sevenDay[5].date.substring(5, sevenDay[5].date.length), y: sevenDay[5].confirmed},
-                            {x: sevenDay[6].date.substring(5, sevenDay[6].date.length), y: sevenDay[6].confirmed, label: recentLabel},
-                        ]}
-                        animate={{
-                            duration: 2000,
-                            opacity: 0.0,
-                            onLoad: { 
-                                duration: 1000,
-                                opacity: 1.0
-                            },
-                        }}
-                        domain={{
-                            y: [0, this.props.maxConfirmed + 10]
-                        }}
-                    />
-                    <VictoryScatter
-                        data={[
-                            {x: sevenDay[0].date.substring(5, sevenDay[0].date.length), y: sevenDay[0].confirmed},
-                            {x: sevenDay[1].date.substring(5, sevenDay[1].date.length), y: sevenDay[1].confirmed},
-                            {x: sevenDay[2].date.substring(5, sevenDay[2].date.length), y: sevenDay[2].confirmed},
-                            {x: sevenDay[3].date.substring(5, sevenDay[3].date.length), y: sevenDay[3].confirmed},
-                            {x: sevenDay[4].date.substring(5, sevenDay[4].date.length), y: sevenDay[4].confirmed},
-                            {x: sevenDay[5].date.substring(5, sevenDay[5].date.length), y: sevenDay[5].confirmed},
-                            {x: sevenDay[6].date.substring(5, sevenDay[6].date.length), y: sevenDay[6].confirmed, label: recentLabel},
-                        ]}
-                        animate={{
-                            duration: 2000,
-                            opacity: 0.0,
-                            onLoad: { 
-                                duration: 1000,
-                                opacity: 1.0
-                            },
-                        }}
-                        domain={{
-                            y: [0, this.props.maxConfirmed + 10]
-                        }}
-                    />
+                <p>Changes in Confirmed Cases Over 30 Days for {this.props.county} County</p>
+                <VictoryChart containerComponent={<VictoryZoomContainer zoomDimension="x" zoomDomain={{x:[22,30]}} allowZoom={false}/>}>
+                <VictoryLine
+                    name="dates"
+                    interpolation="natural"
+                    style={{
+                        data: { stroke: "#c43a31" },
+                        parent: { border: "1px solid black", width: "10%"},
+                    }}
+                    data={[
+                        {x: thirtyDayArray[0].date.substring(5, thirtyDayArray[0].date.length), y: thirtyDayArray[0].confirmed},
+                        {x: thirtyDayArray[1].date.substring(5, thirtyDayArray[1].date.length), y: thirtyDayArray[1].confirmed},
+                        {x: thirtyDayArray[2].date.substring(5, thirtyDayArray[2].date.length), y: thirtyDayArray[2].confirmed},
+                        {x: thirtyDayArray[3].date.substring(5, thirtyDayArray[3].date.length), y: thirtyDayArray[3].confirmed},
+                        {x: thirtyDayArray[4].date.substring(5, thirtyDayArray[4].date.length), y: thirtyDayArray[4].confirmed},
+                        {x: thirtyDayArray[5].date.substring(5, thirtyDayArray[5].date.length), y: thirtyDayArray[5].confirmed},
+                        {x: thirtyDayArray[6].date.substring(5, thirtyDayArray[6].date.length), y: thirtyDayArray[6].confirmed},
+                        {x: thirtyDayArray[7].date.substring(5, thirtyDayArray[7].date.length), y: thirtyDayArray[7].confirmed},
+                        {x: thirtyDayArray[8].date.substring(5, thirtyDayArray[8].date.length), y: thirtyDayArray[8].confirmed},
+                        {x: thirtyDayArray[9].date.substring(5, thirtyDayArray[9].date.length), y: thirtyDayArray[9].confirmed},
+                        {x: thirtyDayArray[10].date.substring(5, thirtyDayArray[10].date.length), y: thirtyDayArray[10].confirmed},
+                        {x: thirtyDayArray[11].date.substring(5, thirtyDayArray[11].date.length), y: thirtyDayArray[11].confirmed},
+                        {x: thirtyDayArray[12].date.substring(5, thirtyDayArray[12].date.length), y: thirtyDayArray[12].confirmed},
+                        {x: thirtyDayArray[13].date.substring(5, thirtyDayArray[13].date.length), y: thirtyDayArray[13].confirmed},
+                        {x: thirtyDayArray[14].date.substring(5, thirtyDayArray[14].date.length), y: thirtyDayArray[14].confirmed},
+                        {x: thirtyDayArray[15].date.substring(5, thirtyDayArray[15].date.length), y: thirtyDayArray[15].confirmed},
+                        {x: thirtyDayArray[16].date.substring(5, thirtyDayArray[16].date.length), y: thirtyDayArray[16].confirmed},
+                        {x: thirtyDayArray[17].date.substring(5, thirtyDayArray[17].date.length), y: thirtyDayArray[17].confirmed},
+                        {x: thirtyDayArray[18].date.substring(5, thirtyDayArray[18].date.length), y: thirtyDayArray[18].confirmed},
+                        {x: thirtyDayArray[19].date.substring(5, thirtyDayArray[19].date.length), y: thirtyDayArray[19].confirmed},
+                        {x: thirtyDayArray[20].date.substring(5, thirtyDayArray[20].date.length), y: thirtyDayArray[20].confirmed},
+                        {x: thirtyDayArray[21].date.substring(5, thirtyDayArray[21].date.length), y: thirtyDayArray[21].confirmed},
+                        {x: thirtyDayArray[22].date.substring(5, thirtyDayArray[22].date.length), y: thirtyDayArray[22].confirmed},
+                        {x: thirtyDayArray[23].date.substring(5, thirtyDayArray[23].date.length), y: thirtyDayArray[23].confirmed},
+                        {x: thirtyDayArray[24].date.substring(5, thirtyDayArray[24].date.length), y: thirtyDayArray[24].confirmed},
+                        {x: thirtyDayArray[25].date.substring(5, thirtyDayArray[25].date.length), y: thirtyDayArray[25].confirmed},
+                        {x: thirtyDayArray[26].date.substring(5, thirtyDayArray[26].date.length), y: thirtyDayArray[26].confirmed},
+                        {x: thirtyDayArray[27].date.substring(5, thirtyDayArray[27].date.length), y: thirtyDayArray[27].confirmed},
+                        {x: thirtyDayArray[28].date.substring(5, thirtyDayArray[28].date.length), y: thirtyDayArray[28].confirmed},
+                        {x: thirtyDayArray[29].date.substring(5, thirtyDayArray[29].date.length), y: thirtyDayArray[29].confirmed},
+                    ]}
+                    animate={{
+                        duration: 2000,
+                        opacity: 0.0,
+                        onLoad: { 
+                            duration: 1000,
+                            opacity: 1.0
+                        },
+                    }}
+                    domain={{
+                        y: [0, this.props.maxConfirmed + 50]
+                    }}
+                />
+                <VictoryScatter 
+                    data={[
+                        {x: thirtyDayArray[0].date.substring(5, thirtyDayArray[0].date.length), y: thirtyDayArray[0].confirmed},
+                        {x: thirtyDayArray[1].date.substring(5, thirtyDayArray[1].date.length), y: thirtyDayArray[1].confirmed},
+                        {x: thirtyDayArray[2].date.substring(5, thirtyDayArray[2].date.length), y: thirtyDayArray[2].confirmed},
+                        {x: thirtyDayArray[3].date.substring(5, thirtyDayArray[3].date.length), y: thirtyDayArray[3].confirmed},
+                        {x: thirtyDayArray[4].date.substring(5, thirtyDayArray[4].date.length), y: thirtyDayArray[4].confirmed},
+                        {x: thirtyDayArray[5].date.substring(5, thirtyDayArray[5].date.length), y: thirtyDayArray[5].confirmed},
+                        {x: thirtyDayArray[6].date.substring(5, thirtyDayArray[6].date.length), y: thirtyDayArray[6].confirmed},
+                        {x: thirtyDayArray[7].date.substring(5, thirtyDayArray[7].date.length), y: thirtyDayArray[7].confirmed},
+                        {x: thirtyDayArray[8].date.substring(5, thirtyDayArray[8].date.length), y: thirtyDayArray[8].confirmed},
+                        {x: thirtyDayArray[9].date.substring(5, thirtyDayArray[9].date.length), y: thirtyDayArray[9].confirmed},
+                        {x: thirtyDayArray[10].date.substring(5, thirtyDayArray[10].date.length), y: thirtyDayArray[10].confirmed},
+                        {x: thirtyDayArray[11].date.substring(5, thirtyDayArray[11].date.length), y: thirtyDayArray[11].confirmed},
+                        {x: thirtyDayArray[12].date.substring(5, thirtyDayArray[12].date.length), y: thirtyDayArray[12].confirmed},
+                        {x: thirtyDayArray[13].date.substring(5, thirtyDayArray[13].date.length), y: thirtyDayArray[13].confirmed},
+                        {x: thirtyDayArray[14].date.substring(5, thirtyDayArray[14].date.length), y: thirtyDayArray[14].confirmed},
+                        {x: thirtyDayArray[15].date.substring(5, thirtyDayArray[15].date.length), y: thirtyDayArray[15].confirmed},
+                        {x: thirtyDayArray[16].date.substring(5, thirtyDayArray[16].date.length), y: thirtyDayArray[16].confirmed},
+                        {x: thirtyDayArray[17].date.substring(5, thirtyDayArray[17].date.length), y: thirtyDayArray[17].confirmed},
+                        {x: thirtyDayArray[18].date.substring(5, thirtyDayArray[18].date.length), y: thirtyDayArray[18].confirmed},
+                        {x: thirtyDayArray[19].date.substring(5, thirtyDayArray[19].date.length), y: thirtyDayArray[19].confirmed},
+                        {x: thirtyDayArray[20].date.substring(5, thirtyDayArray[20].date.length), y: thirtyDayArray[20].confirmed},
+                        {x: thirtyDayArray[21].date.substring(5, thirtyDayArray[21].date.length), y: thirtyDayArray[21].confirmed},
+                        {x: thirtyDayArray[22].date.substring(5, thirtyDayArray[22].date.length), y: thirtyDayArray[22].confirmed},
+                        {x: thirtyDayArray[23].date.substring(5, thirtyDayArray[23].date.length), y: thirtyDayArray[23].confirmed},
+                        {x: thirtyDayArray[24].date.substring(5, thirtyDayArray[24].date.length), y: thirtyDayArray[24].confirmed},
+                        {x: thirtyDayArray[25].date.substring(5, thirtyDayArray[25].date.length), y: thirtyDayArray[25].confirmed},
+                        {x: thirtyDayArray[26].date.substring(5, thirtyDayArray[26].date.length), y: thirtyDayArray[26].confirmed},
+                        {x: thirtyDayArray[27].date.substring(5, thirtyDayArray[27].date.length), y: thirtyDayArray[27].confirmed},
+                        {x: thirtyDayArray[28].date.substring(5, thirtyDayArray[28].date.length), y: thirtyDayArray[28].confirmed},
+                        {x: thirtyDayArray[29].date.substring(5, thirtyDayArray[29].date.length), y: thirtyDayArray[29].confirmed},
+                    ]}
+                    domain={{
+                        y: [0, this.props.maxConfirmed + 50]
+                    }}
+                    size={5}
+                    labels={({ datum }) => `${datum.y}`}
+                    labelComponent={<VictoryTooltip dy={0}/>}
+                />
                 </VictoryChart>
             </div>
         )
@@ -362,11 +414,10 @@ class VisualizeConfirmed extends React.Component {
 
 class VisualizeDeaths extends React.Component {
     render() {
-        let recentLabel = Math.abs(sevenDay[6].deaths) + " new fatalities";
         return(
             <div>
-                <h4>Number of Fatalities Over 7 Days for {this.props.county} County</h4>
-                <VictoryChart>
+                <p>Number of Fatalities Over 30 Days for {this.props.county} County</p>
+                <VictoryChart containerComponent={<VictoryZoomContainer zoomDimension="x" zoomDomain={{x:[22,30]}} allowZoom={false}/>}>
                     <VictoryLine
                         interpolation="natural"
                         style={{
@@ -374,13 +425,36 @@ class VisualizeDeaths extends React.Component {
                             parent: { border: "1px solid black", width: "10%"}
                         }}
                         data={[
-                            {x: sevenDay[0].date.substring(5, sevenDay[0].date.length), y: sevenDay[0].deaths},
-                            {x: sevenDay[1].date.substring(5, sevenDay[1].date.length), y: sevenDay[1].deaths},
-                            {x: sevenDay[2].date.substring(5, sevenDay[2].date.length), y: sevenDay[2].deaths},
-                            {x: sevenDay[3].date.substring(5, sevenDay[3].date.length), y: sevenDay[3].deaths},
-                            {x: sevenDay[4].date.substring(5, sevenDay[4].date.length), y: sevenDay[4].deaths},
-                            {x: sevenDay[5].date.substring(5, sevenDay[5].date.length), y: sevenDay[5].deaths},
-                            {x: sevenDay[6].date.substring(5, sevenDay[6].date.length), y: sevenDay[6].deaths, label: recentLabel},
+                            {x: thirtyDayArray[0].date.substring(5, thirtyDayArray[0].date.length), y: thirtyDayArray[0].deaths},
+                            {x: thirtyDayArray[1].date.substring(5, thirtyDayArray[1].date.length), y: thirtyDayArray[1].deaths},
+                            {x: thirtyDayArray[2].date.substring(5, thirtyDayArray[2].date.length), y: thirtyDayArray[2].deaths},
+                            {x: thirtyDayArray[3].date.substring(5, thirtyDayArray[3].date.length), y: thirtyDayArray[3].deaths},
+                            {x: thirtyDayArray[4].date.substring(5, thirtyDayArray[4].date.length), y: thirtyDayArray[4].deaths},
+                            {x: thirtyDayArray[5].date.substring(5, thirtyDayArray[5].date.length), y: thirtyDayArray[5].deaths},
+                            {x: thirtyDayArray[6].date.substring(5, thirtyDayArray[6].date.length), y: thirtyDayArray[6].deaths},
+                            {x: thirtyDayArray[7].date.substring(5, thirtyDayArray[7].date.length), y: thirtyDayArray[7].deaths},
+                            {x: thirtyDayArray[8].date.substring(5, thirtyDayArray[8].date.length), y: thirtyDayArray[8].deaths},
+                            {x: thirtyDayArray[9].date.substring(5, thirtyDayArray[9].date.length), y: thirtyDayArray[9].deaths},
+                            {x: thirtyDayArray[10].date.substring(5, thirtyDayArray[10].date.length), y: thirtyDayArray[10].deaths},
+                            {x: thirtyDayArray[11].date.substring(5, thirtyDayArray[11].date.length), y: thirtyDayArray[11].deaths},
+                            {x: thirtyDayArray[12].date.substring(5, thirtyDayArray[12].date.length), y: thirtyDayArray[12].deaths},
+                            {x: thirtyDayArray[13].date.substring(5, thirtyDayArray[13].date.length), y: thirtyDayArray[13].deaths},
+                            {x: thirtyDayArray[14].date.substring(5, thirtyDayArray[14].date.length), y: thirtyDayArray[14].deaths},
+                            {x: thirtyDayArray[15].date.substring(5, thirtyDayArray[15].date.length), y: thirtyDayArray[15].deaths},
+                            {x: thirtyDayArray[16].date.substring(5, thirtyDayArray[16].date.length), y: thirtyDayArray[16].deaths},
+                            {x: thirtyDayArray[17].date.substring(5, thirtyDayArray[17].date.length), y: thirtyDayArray[17].deaths},
+                            {x: thirtyDayArray[18].date.substring(5, thirtyDayArray[18].date.length), y: thirtyDayArray[18].deaths},
+                            {x: thirtyDayArray[19].date.substring(5, thirtyDayArray[19].date.length), y: thirtyDayArray[19].deaths},
+                            {x: thirtyDayArray[20].date.substring(5, thirtyDayArray[20].date.length), y: thirtyDayArray[20].deaths},
+                            {x: thirtyDayArray[21].date.substring(5, thirtyDayArray[21].date.length), y: thirtyDayArray[21].deaths},
+                            {x: thirtyDayArray[22].date.substring(5, thirtyDayArray[22].date.length), y: thirtyDayArray[22].deaths},
+                            {x: thirtyDayArray[23].date.substring(5, thirtyDayArray[23].date.length), y: thirtyDayArray[23].deaths},
+                            {x: thirtyDayArray[24].date.substring(5, thirtyDayArray[24].date.length), y: thirtyDayArray[24].deaths},
+                            {x: thirtyDayArray[25].date.substring(5, thirtyDayArray[25].date.length), y: thirtyDayArray[25].deaths},
+                            {x: thirtyDayArray[26].date.substring(5, thirtyDayArray[26].date.length), y: thirtyDayArray[26].deaths},
+                            {x: thirtyDayArray[27].date.substring(5, thirtyDayArray[27].date.length), y: thirtyDayArray[27].deaths},
+                            {x: thirtyDayArray[28].date.substring(5, thirtyDayArray[28].date.length), y: thirtyDayArray[28].deaths},
+                            {x: thirtyDayArray[29].date.substring(5, thirtyDayArray[29].date.length), y: thirtyDayArray[29].deaths},
                         ]}
                         animate={{
                             duration: 2000,
@@ -392,18 +466,41 @@ class VisualizeDeaths extends React.Component {
 
                         }}
                         domain={{
-                            y: [0, this.props.maxDeaths + 5]
+                            y: [0, this.props.maxDeaths]
                         }}
                     />
                     <VictoryScatter
                         data={[
-                            {x: sevenDay[0].date.substring(5, sevenDay[0].date.length), y: sevenDay[0].deaths},
-                            {x: sevenDay[1].date.substring(5, sevenDay[1].date.length), y: sevenDay[1].deaths},
-                            {x: sevenDay[2].date.substring(5, sevenDay[2].date.length), y: sevenDay[2].deaths},
-                            {x: sevenDay[3].date.substring(5, sevenDay[3].date.length), y: sevenDay[3].deaths},
-                            {x: sevenDay[4].date.substring(5, sevenDay[4].date.length), y: sevenDay[4].deaths},
-                            {x: sevenDay[5].date.substring(5, sevenDay[5].date.length), y: sevenDay[5].deaths},
-                            {x: sevenDay[6].date.substring(5, sevenDay[6].date.length), y: sevenDay[6].deaths, label: recentLabel},
+                            {x: thirtyDayArray[0].date.substring(5, thirtyDayArray[0].date.length), y: thirtyDayArray[0].deaths},
+                            {x: thirtyDayArray[1].date.substring(5, thirtyDayArray[1].date.length), y: thirtyDayArray[1].deaths},
+                            {x: thirtyDayArray[2].date.substring(5, thirtyDayArray[2].date.length), y: thirtyDayArray[2].deaths},
+                            {x: thirtyDayArray[3].date.substring(5, thirtyDayArray[3].date.length), y: thirtyDayArray[3].deaths},
+                            {x: thirtyDayArray[4].date.substring(5, thirtyDayArray[4].date.length), y: thirtyDayArray[4].deaths},
+                            {x: thirtyDayArray[5].date.substring(5, thirtyDayArray[5].date.length), y: thirtyDayArray[5].deaths},
+                            {x: thirtyDayArray[6].date.substring(5, thirtyDayArray[6].date.length), y: thirtyDayArray[6].deaths},
+                            {x: thirtyDayArray[7].date.substring(5, thirtyDayArray[7].date.length), y: thirtyDayArray[7].deaths},
+                            {x: thirtyDayArray[8].date.substring(5, thirtyDayArray[8].date.length), y: thirtyDayArray[8].deaths},
+                            {x: thirtyDayArray[9].date.substring(5, thirtyDayArray[9].date.length), y: thirtyDayArray[9].deaths},
+                            {x: thirtyDayArray[10].date.substring(5, thirtyDayArray[10].date.length), y: thirtyDayArray[10].deaths},
+                            {x: thirtyDayArray[11].date.substring(5, thirtyDayArray[11].date.length), y: thirtyDayArray[11].deaths},
+                            {x: thirtyDayArray[12].date.substring(5, thirtyDayArray[12].date.length), y: thirtyDayArray[12].deaths},
+                            {x: thirtyDayArray[13].date.substring(5, thirtyDayArray[13].date.length), y: thirtyDayArray[13].deaths},
+                            {x: thirtyDayArray[14].date.substring(5, thirtyDayArray[14].date.length), y: thirtyDayArray[14].deaths},
+                            {x: thirtyDayArray[15].date.substring(5, thirtyDayArray[15].date.length), y: thirtyDayArray[15].deaths},
+                            {x: thirtyDayArray[16].date.substring(5, thirtyDayArray[16].date.length), y: thirtyDayArray[16].deaths},
+                            {x: thirtyDayArray[17].date.substring(5, thirtyDayArray[17].date.length), y: thirtyDayArray[17].deaths},
+                            {x: thirtyDayArray[18].date.substring(5, thirtyDayArray[18].date.length), y: thirtyDayArray[18].deaths},
+                            {x: thirtyDayArray[19].date.substring(5, thirtyDayArray[19].date.length), y: thirtyDayArray[19].deaths},
+                            {x: thirtyDayArray[20].date.substring(5, thirtyDayArray[20].date.length), y: thirtyDayArray[20].deaths},
+                            {x: thirtyDayArray[21].date.substring(5, thirtyDayArray[21].date.length), y: thirtyDayArray[21].deaths},
+                            {x: thirtyDayArray[22].date.substring(5, thirtyDayArray[22].date.length), y: thirtyDayArray[22].deaths},
+                            {x: thirtyDayArray[23].date.substring(5, thirtyDayArray[23].date.length), y: thirtyDayArray[23].deaths},
+                            {x: thirtyDayArray[24].date.substring(5, thirtyDayArray[24].date.length), y: thirtyDayArray[24].deaths},
+                            {x: thirtyDayArray[25].date.substring(5, thirtyDayArray[25].date.length), y: thirtyDayArray[25].deaths},
+                            {x: thirtyDayArray[26].date.substring(5, thirtyDayArray[26].date.length), y: thirtyDayArray[26].deaths},
+                            {x: thirtyDayArray[27].date.substring(5, thirtyDayArray[27].date.length), y: thirtyDayArray[27].deaths},
+                            {x: thirtyDayArray[28].date.substring(5, thirtyDayArray[28].date.length), y: thirtyDayArray[28].deaths},
+                            {x: thirtyDayArray[29].date.substring(5, thirtyDayArray[29].date.length), y: thirtyDayArray[29].deaths},
                         ]}
                         animate={{
                             duration: 2000,
@@ -415,8 +512,11 @@ class VisualizeDeaths extends React.Component {
 
                         }}
                         domain={{
-                            y: [0, this.props.maxDeaths + 5]
+                            y: [0, this.props.maxDeaths]
                         }}
+                        size={5}
+                        labels={({ datum }) => `${datum.y}`}
+                        labelComponent={<VictoryTooltip dy={0}/>}
                     />
                 </VictoryChart>
             </div>
@@ -493,13 +593,17 @@ class LoadingScreen extends React.Component {
     }
 }
 
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 class DisplayWorldData extends React.Component {
     render() {
         let rate = (this.props.data.fatality_rate * 100);
         return(
             <div>
                 <h4>World Statistics</h4>
-                <p>Confirmed: {this.props.data.confirmed} | Recovered: {this.props.data.recovered} | Fatalities: {this.props.data.deaths} | Fatality Rate: {rate.toFixed(3)}%</p>
+                <p>Confirmed: {numberWithCommas(this.props.data.confirmed)} | Recovered: {numberWithCommas(this.props.data.recovered)} | Fatalities: {numberWithCommas(this.props.data.deaths)} | Approximate Fatality Rate: {rate.toFixed(3)}%</p>
             </div>
         )
     }
@@ -512,11 +616,11 @@ function App() {
                 <div class="main">
                     <div class="headers">
                         <h1>COVID-19 County Tracker</h1>
-                        <h4>Data as of {currentDate}</h4>
+                        <h4>Data as of {moment().subtract(1, 'days').format("MMMM DD, YYYY")}</h4>
                     </div>
                     <header class="world-data"><WorldData /></header>
                     <div class="search"><CountyData /></div>
-                    <footer>Created by <a href="https://www.linkedin.com/in/davidhan93/">David Han</a> | <a href="https://rapidapi.com/axisbits-axisbits-default/api/covid-19-statistics">Data</a> provided by John Hopkins University</footer>
+                    <footer><h4>Created by <a href="https://www.linkedin.com/in/davidhan93/">David Han</a> | <a href="https://rapidapi.com/axisbits-axisbits-default/api/covid-19-statistics">Data</a> provided by John Hopkins University</h4></footer>
                 </div>
             </Grid>
         </Grid>

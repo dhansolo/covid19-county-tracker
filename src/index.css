@@ -1,5 +1,5 @@
 html {
-    background-color: antiquewhite;
+    background-color: lightgray;
 }
 
 .main {
@@ -30,11 +30,20 @@ html {
 }
 
 #result {
-    margin-top: 20px;
+    margin-top: 0px;
+    margin-bottom: 70px;
 }
 
 .info h3 {
     text-decoration: underline;
+}
+
+#visualize-confirmed {
+    margin: 5px 5px 0px 5px;
+}
+
+#visualize-deaths {
+    margin: 5px 5px 0px 5px;
 }
 
 .headers h1 {
