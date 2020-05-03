@@ -295,10 +295,13 @@ class Info extends React.Component {
                 <Grid container justify="center">
                     <div class="info">
                         {/* <div>Graphs are draggable to the left and right. Hovering over points will show the exact numbers.</div> */}
-                        <Paper variant='elevation' elevation={24}>
+                        {/* <Paper variant='elevation' elevation={24}> */}
                             <h3>Statistics for {this.props.county} {type}, {this.props.state}</h3>
-                            <p><b>Confirmed:</b> {this.props.confirmed} | <b>Fatalities:</b> {this.props.deaths} | <b>Approximate Fatality Rate:</b> {rate.toFixed(3)}%</p>
-                        </Paper>
+                            <Chip id="county-confirmed" label={"Confirmed: " + this.props.confirmed}></Chip>
+                            <Chip id="county-deaths" label={"Fatalities: " + this.props.deaths}></Chip>
+                            <Chip id="county-rate" label={"Approximate Fatality Rate: " + rate.toFixed(3) + "%"}></Chip>
+                            {/* <p><b>Confirmed:</b> {this.props.confirmed} | <b>Fatalities:</b> {this.props.deaths} | <b>Approximate Fatality Rate:</b> {rate.toFixed(3)}%</p> */}
+                        {/* </Paper> */}
                     </div>
                 </Grid>
                 <Grid container justify="center">

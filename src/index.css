@@ -42,6 +42,10 @@ html {
     margin-bottom: 70px;
 }
 
+.info {
+    padding: 5px 5px 5px 5px;
+}
+
 .info h3 {
     text-decoration: underline;
 }
@@ -74,7 +78,11 @@ html {
     border-radius: 0px 0px 10px 10px;
 }
 
-#world-confirmed {
+.world-data h3 {
+    text-decoration: underline;
+}
+
+#world-confirmed, #county-confirmed {
     background-color: yellow;
 }
 
@@ -82,11 +90,11 @@ html {
     background-color: green;
 }
 
-#world-deaths {
+#world-deaths, #county-deaths {
     background-color: red;
 }
 
-#world-rate {
+#world-rate, #county-rate {
     background: lightblue;
 }
 
