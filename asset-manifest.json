@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/covid19-county-tracker/static/css/main.198ec28c.chunk.css",
+    "main.css": "/covid19-county-tracker/static/css/main.9163b673.chunk.css",
     "main.js": "/covid19-county-tracker/static/js/main.be9e92e3.chunk.js",
     "main.js.map": "/covid19-county-tracker/static/js/main.be9e92e3.chunk.js.map",
     "runtime-main.js": "/covid19-county-tracker/static/js/runtime-main.61edeb47.js",
@@ -8,15 +8,15 @@
     "static/js/2.abc4b196.chunk.js": "/covid19-county-tracker/static/js/2.abc4b196.chunk.js",
     "static/js/2.abc4b196.chunk.js.map": "/covid19-county-tracker/static/js/2.abc4b196.chunk.js.map",
     "index.html": "/covid19-county-tracker/index.html",
-    "precache-manifest.71b3c708969c4c0574fb82cfd847c609.js": "/covid19-county-tracker/precache-manifest.71b3c708969c4c0574fb82cfd847c609.js",
+    "precache-manifest.5d5a7343c320234c7e4eb0889dd0bb05.js": "/covid19-county-tracker/precache-manifest.5d5a7343c320234c7e4eb0889dd0bb05.js",
     "service-worker.js": "/covid19-county-tracker/service-worker.js",
-    "static/css/main.198ec28c.chunk.css.map": "/covid19-county-tracker/static/css/main.198ec28c.chunk.css.map",
+    "static/css/main.9163b673.chunk.css.map": "/covid19-county-tracker/static/css/main.9163b673.chunk.css.map",
     "static/js/2.abc4b196.chunk.js.LICENSE.txt": "/covid19-county-tracker/static/js/2.abc4b196.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.61edeb47.js",
     "static/js/2.abc4b196.chunk.js",
-    "static/css/main.198ec28c.chunk.css",
+    "static/css/main.9163b673.chunk.css",
     "static/js/main.be9e92e3.chunk.js"
   ]
 }
