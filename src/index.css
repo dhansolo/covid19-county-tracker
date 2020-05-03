@@ -53,6 +53,7 @@ html {
 
 .headers h1 {
     color: white;
+    font-family: "Permanent Marker", sans-serif;
     font-style: italic;
     /* text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; */
 }

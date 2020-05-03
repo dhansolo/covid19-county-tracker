@@ -624,7 +624,7 @@ function App() {
                     <header class="world-data"><WorldData /></header>
                     <div class="search"><CountyData /></div>
                     <footer>
-                        <Link href="https://www.linkedin.com/in/davidhan93/"><Chip id="chip" avatar={<Avatar>DH</Avatar>} label="Created by David Han" clickable onClick=""></Chip></Link>
+                        <Link href="https://www.linkedin.com/in/davidhan93/"><Chip id="chip" avatar={<Avatar>DH</Avatar>} label="Created by David Han" clickable></Chip></Link>
                         <Chip id="chip" href="https://rapidapi.com/axisbits-axisbits-default/api/covid-19-statistics" label="Data provided by John Hopkins University"></Chip>
                     </footer>
                 </div>
