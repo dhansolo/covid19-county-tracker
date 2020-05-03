@@ -13,7 +13,10 @@ import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
+import Avatar from '@material-ui/core/Avatar';
+import Chip from '@material-ui/core/Chip';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Link from '@material-ui/core/Link';
 
 import {VictoryChart, VictoryZoomContainer, VictoryTooltip, VictoryLine, VictoryScatter} from 'victory';
 
@@ -620,7 +623,10 @@ function App() {
                     </div>
                     <header class="world-data"><WorldData /></header>
                     <div class="search"><CountyData /></div>
-                    <footer><h4>Created by <a href="https://www.linkedin.com/in/davidhan93/">David Han</a> | <a href="https://rapidapi.com/axisbits-axisbits-default/api/covid-19-statistics">Data</a> provided by John Hopkins University</h4></footer>
+                    <footer>
+                        <Link href="https://www.linkedin.com/in/davidhan93/"><Chip id="chip" avatar={<Avatar>DH</Avatar>} label="Created by David Han" clickable onClick=""></Chip></Link>
+                        <Chip id="chip" href="https://rapidapi.com/axisbits-axisbits-default/api/covid-19-statistics" label="Data provided by John Hopkins University"></Chip>
+                    </footer>
                 </div>
             </Grid>
         </Grid>
