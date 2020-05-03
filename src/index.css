@@ -37,7 +37,6 @@ html {
 
 #result {
     margin-top: 0px;
-    margin-bottom: 70px;
 }
 
 .info h3 {
@@ -70,7 +69,7 @@ html {
     background-color: lightcoral;
     color: black;
     text-align: center;
-    z-index: 1;
+    z-index: 100;
     border-radius: 0px 0px 10px 10px;
 }
 
@@ -81,7 +80,6 @@ footer {
     width: 100%;
     color: black;
     text-align: center;
-    border-radius: 10px 10px 0px 0px;
 }
 
 #chip {
