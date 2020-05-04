@@ -7,7 +7,7 @@ html {
     font-family: "Roboto", sans-serif;
     text-align: center;
     color: white;
-    margin-top: 160px;
+    margin-top: 135px;
 }
 
 .search {
@@ -38,7 +38,7 @@ html {
 }
 
 #result {
-    margin-top: 0px;
+    margin-top: 10px;
     margin-bottom: 70px;
 }
 

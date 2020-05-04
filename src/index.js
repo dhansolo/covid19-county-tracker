@@ -275,6 +275,7 @@ class CountyData extends React.Component {
                     </FormControl>
                     <Button id="search-button" variant="contained" color="secondary" onClick={this.handleSearchClick}>Search</Button>
                 </div>
+                <Chip id="date-chip" label={"Data as of " + moment().subtract(1, 'days').format("MMMM DD, YYYY")}></Chip>
                 <div id="result">
                     {info}
                     {loadImage}
@@ -621,12 +622,10 @@ class DisplayWorldData extends React.Component {
 }
 
 function App() {
-    let date = moment().subtract(1, 'days').format("MMMM DD, YYYY")
     return (
         <Grid container justify="center">
             <Grid item xs={12}>
                 <div class="main">
-                    <Chip id="date-chip" label={"Data as of " + date}></Chip>
                     <div class="headers">
                         <h1>COVID-19 County Tracker</h1>
                     </div>
