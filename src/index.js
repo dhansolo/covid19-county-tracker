@@ -18,7 +18,7 @@ import Chip from '@material-ui/core/Chip';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Link from '@material-ui/core/Link';
 
-import {VictoryChart, VictoryZoomContainer, VictoryTooltip, VictoryLine, VictoryScatter} from 'victory';
+import {VictoryChart, VictoryZoomContainer, VictoryTooltip, VictoryLabel, VictoryLine, VictoryScatter} from 'victory';
 
 // Create a date string in the format YYYY-MM-DD
 let date = moment().subtract(1, 'days');
@@ -40,6 +40,7 @@ if(date.month() + 1 < 10) {
 
 let thirtyDayArray = [];
 let info = null;
+let type = 'County';
 
 let minConfirmed = null;
 let minDeaths = null;
@@ -287,7 +288,6 @@ class CountyData extends React.Component {
 class Info extends React.Component {
     render() {
         let rate = (this.props.deaths/this.props.confirmed) * 100;
-        let type = 'County';
         if(this.props.state === "Alaska") { type = "Borough"}
         if(this.props.state === "Louisiana") { type = "Parish"}
         return (
@@ -317,8 +317,9 @@ class VisualizeConfirmed extends React.Component {
     render() {
         return(
             <div>
-                <p>Changes in Confirmed Cases Over 30 Days for {this.props.county} County</p>
+                {/* <p>Changes in Confirmed Cases Over 30 Days for {this.props.county} County</p> */}
                 <VictoryChart containerComponent={<VictoryZoomContainer zoomDimension="x" zoomDomain={{x:[22,30]}} allowZoom={false}/>}>
+                <VictoryLabel text={"Changes in Confirmed cases Over 30 days for " + this.props.county + " " + type} x={225} y={30} textAnchor="middle"/>
                 <VictoryLine
                     name="dates"
                     interpolation="natural"
@@ -420,8 +421,9 @@ class VisualizeDeaths extends React.Component {
     render() {
         return(
             <div>
-                <p>Number of Fatalities Over 30 Days for {this.props.county} County</p>
+                {/* <p>Number of Fatalities Over 30 Days for {this.props.county} County</p> */}
                 <VictoryChart containerComponent={<VictoryZoomContainer zoomDimension="x" zoomDomain={{x:[22,30]}} allowZoom={false}/>}>
+                    <VictoryLabel text={"Number of Fatalities Over 30 days for " + this.props.county + " " + type} x={225} y={30} textAnchor="middle"/>
                     <VictoryLine
                         interpolation="natural"
                         style={{
