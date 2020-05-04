@@ -6,7 +6,9 @@
 2. Generate an API Key on RapidAPI with the COVID-19 Statistics API
     - https://rapidapi.com/axisbits-axisbits-default/api/covid-19-statistics
 3. Once you have your key, create a new '.env' file at the root of your project
-4. In the '.env' file, input 'REACT_APP_API_KEY=' and paste your API key
-5. 'cd' into the project folder and enter 'npm start'
+4. In the '.env' file, input the following items:
+    - REACT_APP_HOST=<YOUR_HOST>
+    - REACT_APP_API_KEY=<YOUR_API_KEY>
+6. 'cd' into the project folder and enter 'npm start'
 
 <b>Thanks to John Hopkins University for providing and updating the data.</b>

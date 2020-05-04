@@ -120,13 +120,13 @@ class CountyData extends React.Component {
                     current = date.year() + "-" + (date.month() + 1) + "-" + date.date();
                 }
             }
-            this.callAxios(current);
+            this.getData(current);
             count++;
         }
     }
 
     // Function to make the Axios http request so that the above looks cleaner
-    callAxios(current) {
+    getData(current) {
         // API doesn't like the word 'county' so I'm reformatting the user's terms here to omit 'county'
         // as well as adjusting the casing as the API likes exactness
         let reformattedCounty = this.state.county.toLowerCase();
@@ -409,7 +409,7 @@ class VisualizeConfirmed extends React.Component {
                         y: [0, this.props.maxConfirmed + 50]
                     }}
                     size={6}
-                    labels={({ datum }) => `${datum.y}`}
+                    labels={({ datum }) => `${datum.y} new cases on ${datum.x}`}
                     labelComponent={<VictoryTooltip dy={0}/>}
                 />
                 </VictoryChart>
@@ -522,7 +522,7 @@ class VisualizeDeaths extends React.Component {
                             y: [0, this.props.maxDeaths]
                         }}
                         size={6}
-                        labels={({ datum }) => `${datum.y}`}
+                        labels={({ datum }) => `${datum.y} fatalities on ${datum.x}`}
                         labelComponent={<VictoryTooltip dy={0}/>}
                     />
                 </VictoryChart>
@@ -610,12 +610,13 @@ class DisplayWorldData extends React.Component {
         return(
             <div>
                 <h3>World Statistics</h3>
-                <p>
+                <div>
                     <Chip id="world-confirmed" label={"Confirmed: " + numberWithCommas(this.props.data.confirmed)}></Chip>
                     <Chip id="world-recovered" label={"Recovered: " + numberWithCommas(this.props.data.recovered)}></Chip>
                     <Chip id="world-deaths" label={"Fatalities: " + numberWithCommas(this.props.data.deaths)}></Chip>
                     <Chip id="world-rate" label={"Approximate Fatality Rate: " + rate.toFixed(3) + "%"}></Chip>
-                </p>
+                </div>
+                <p></p>
             </div>
         )
     }
