@@ -15,11 +15,6 @@ html {
     color: white;
 }
 
-#search-button {
-    margin: 10px 10px 10px 20px;
-    background: lightblue;
-    color: black;
-}
 
 #search-county {
     text-align: center;
@@ -34,6 +29,15 @@ html {
     width: 150px;
     left: 10px;
     background-color: white;
+    border-radius: 10px 10px 10px 10px;
+}
+
+#search-button {
+    margin: 0px 10px 10px 20px;
+    height: 55px;
+    width: 140px;
+    background: lightblue;
+    color: black;
     border-radius: 10px 10px 10px 10px;
 }
 
