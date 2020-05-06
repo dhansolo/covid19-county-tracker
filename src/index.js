@@ -319,7 +319,7 @@ class Info extends React.Component {
                                 id="county-rate" 
                                 label={
                                     <div>
-                                        <div><b>Rate:</b></div>
+                                        <div><b>Fatality Rate:</b></div>
                                         <div>{rate.toFixed(3) + "%"}</div>
                                     </div>
                                 }>

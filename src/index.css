@@ -43,7 +43,7 @@ html {
 
 #result {
     margin-top: 10px;
-    margin-bottom: 70px;
+    margin-bottom: 100px;
 }
 
 .info {
@@ -91,19 +91,19 @@ html {
 }
 
 #world-confirmed {
-    background-color: yellow;
+    background-color: #FCFF62;
 }
 
 #world-recovered {
-    background-color: green;
+    background-color: #47B9FF;
 }
 
 #world-deaths {
-    background-color: red;
+    background-color: #FF4249;
 }
 
 #world-rate {
-    background: lightblue;
+    background: #FFAD2D;
 }
 
 #world-confirmed, #world-recovered, #world-deaths, #world-rate {
@@ -114,15 +114,15 @@ html {
 }
 
 #county-confirmed {
-    background: yellow;
+    background: #FCFF62
 }
 
 #county-deaths {
-    background: red;
+    background: #FF4249
 }
 
 #county-rate {
-    background: lightblue;
+    background: #FFAD2D
 }
 
 #county-confirmed, #county-deaths, #county-rate {
@@ -131,14 +131,14 @@ html {
 }
 
 #date-chip {
-    background: lightgoldenrodyellow;
+    background: #FFDEBB
 }
 
 footer {
     position: fixed;
     left: 0;
     bottom: 0px;
-    padding-top: 100px;
+    padding-top: 200px;
     width: 100%;
     color: black;
     text-align: center;
