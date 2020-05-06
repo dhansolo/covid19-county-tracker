@@ -7,7 +7,7 @@ html {
     font-family: "Roboto", sans-serif;
     text-align: center;
     color: white;
-    margin-top: 135px;
+    margin-top: 175px;
 }
 
 .search {
@@ -34,7 +34,7 @@ html {
 
 #search-button {
     margin: 0px 10px 10px 20px;
-    height: 55px;
+    height: 47px;
     width: 140px;
     background: lightblue;
     color: black;
@@ -62,10 +62,14 @@ html {
     margin: 5px 5px 0px 5px;
 }
 
+.headers {
+    margin-bottom: 40px;
+}
+
 .headers h1 {
     color: white;
     font-family: "Jost", sans-serif;
-    font-style: italic;
+    /* font-style: italic; */
     margin-bottom: 5px;
     /* text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; */
 }
@@ -86,7 +90,7 @@ html {
     text-decoration: underline;
 }
 
-#world-confirmed, #county-confirmed {
+#world-confirmed {
     background-color: yellow;
 }
 
@@ -94,16 +98,40 @@ html {
     background-color: green;
 }
 
-#world-deaths, #county-deaths {
+#world-deaths {
     background-color: red;
 }
 
-#world-rate, #county-rate {
+#world-rate {
     background: lightblue;
 }
 
-#date-chip {
+#world-confirmed, #world-recovered, #world-deaths, #world-rate {
+    height: 50px;
+    width: 125px;
+    font-size: 15px;
+    margin: 0px 5px 0px 5px;
+}
+
+#county-confirmed {
+    background: yellow;
+}
+
+#county-deaths {
     background: red;
+}
+
+#county-rate {
+    background: lightblue;
+}
+
+#county-confirmed, #county-deaths, #county-rate {
+    font-size: 12px;
+    margin: 0px 5px 0px 5px;
+}
+
+#date-chip {
+    background: lightgoldenrodyellow;
 }
 
 footer {

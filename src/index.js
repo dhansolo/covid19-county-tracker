@@ -273,9 +273,8 @@ class CountyData extends React.Component {
                             <MenuItem value="Wyoming">Wyoming</MenuItem>
                         </Select>
                     </FormControl>
-                    <Button id="search-button" variant="contained" color="secondary" onClick={this.handleSearchClick}>Search</Button>
                 </div>
-                <Chip id="date-chip" label={"Data as of " + moment().subtract(1, 'days').format("MMMM DD, YYYY")}></Chip>
+                <Button id="search-button" variant="contained" color="secondary" onClick={this.handleSearchClick}>Search</Button>
                 <div id="result">
                     {info}
                     {loadImage}
@@ -298,9 +297,33 @@ class Info extends React.Component {
                         {/* <div>Graphs are draggable to the left and right. Hovering over points will show the exact numbers.</div> */}
                         {/* <Paper variant='elevation' elevation={24}> */}
                             <h3>Statistics for {this.props.county} {type}, {this.props.state}</h3>
-                            <Chip id="county-confirmed" label={"Confirmed: " + this.props.confirmed}></Chip>
-                            <Chip id="county-deaths" label={"Fatalities: " + this.props.deaths}></Chip>
-                            <Chip id="county-rate" label={"Approximate Fatality Rate: " + rate.toFixed(3) + "%"}></Chip>
+                            <Chip 
+                                id="county-confirmed" 
+                                label={
+                                    <div>
+                                        <div><b>Confirmed:</b></div>
+                                        <div>{this.props.confirmed}</div>
+                                    </div>
+                                }>
+                            </Chip>
+                            <Chip 
+                                id="county-deaths" 
+                                label={
+                                    <div>
+                                        <div><b>Fatalities:</b></div>
+                                        <div>{this.props.deaths}</div>
+                                    </div>
+                                }>
+                            </Chip>
+                            <Chip 
+                                id="county-rate" 
+                                label={
+                                    <div>
+                                        <div><b>Rate:</b></div>
+                                        <div>{rate.toFixed(3) + "%"}</div>
+                                    </div>
+                                }>
+                            </Chip>
                             {/* <p><b>Confirmed:</b> {this.props.confirmed} | <b>Fatalities:</b> {this.props.deaths} | <b>Approximate Fatality Rate:</b> {rate.toFixed(3)}%</p> */}
                         {/* </Paper> */}
                     </div>
@@ -611,10 +634,42 @@ class DisplayWorldData extends React.Component {
             <div>
                 <h3>World Statistics</h3>
                 <div>
-                    <Chip id="world-confirmed" label={"Confirmed: " + numberWithCommas(this.props.data.confirmed)}></Chip>
-                    <Chip id="world-recovered" label={"Recovered: " + numberWithCommas(this.props.data.recovered)}></Chip>
-                    <Chip id="world-deaths" label={"Fatalities: " + numberWithCommas(this.props.data.deaths)}></Chip>
-                    <Chip id="world-rate" label={"Approximate Fatality Rate: " + rate.toFixed(3) + "%"}></Chip>
+                    <Chip 
+                        id="world-confirmed" 
+                        label={
+                            <div>
+                                <div><b>Confirmed:</b></div>
+                                <div>{numberWithCommas(this.props.data.confirmed)}</div>
+                            </div>
+                        }>
+                    </Chip>
+                    <Chip 
+                        id="world-recovered" 
+                        label={
+                            <div>
+                                <div><b>Recovered:</b></div>
+                                <div>{numberWithCommas(this.props.data.recovered)}</div>
+                            </div>
+                        }>
+                    </Chip>
+                    <Chip 
+                        id="world-deaths" 
+                        label={
+                            <div>
+                                <div><b>Fatalities:</b></div>
+                                <div>{numberWithCommas(this.props.data.deaths)}</div>
+                            </div>
+                        }>
+                    </Chip>
+                    <Chip 
+                        id="world-rate" 
+                        label={
+                            <div>
+                                <div><b>Fatality Rate:</b></div>
+                                <div>{rate.toFixed(3) + "%"}</div>
+                            </div>
+                        }>
+                    </Chip>
                 </div>
                 <p></p>
             </div>
@@ -629,11 +684,13 @@ function App() {
                 <div class="main">
                     <div class="headers">
                         <h1>COVID-19 County Tracker</h1>
+                        <Chip id="date-chip" label={"Data as of " + moment().subtract(1, 'days').format("MMMM DD, YYYY")}></Chip>
                     </div>
                     <header class="world-data"><WorldData /></header>
                     <div class="search"><CountyData /></div>
                     <footer>
                         <Link href="https://www.linkedin.com/in/davidhan93/"><Chip id="chip" avatar={<Avatar>DH</Avatar>} label="Created by David Han" clickable></Chip></Link>
+                        <Link href="https://www.linkedin.com/in/john-son-997aaa175/"><Chip id="chip" avatar={<Avatar>JS</Avatar>} label="Styled by John Son" clickable></Chip></Link>
                         <Chip id="chip" label="Data provided by John Hopkins University"></Chip>
                     </footer>
                 </div>
