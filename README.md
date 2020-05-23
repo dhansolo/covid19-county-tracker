@@ -1,6 +1,8 @@
 <h1>COVID-19 County Tracker</h1>
 
-<h3>Steps to run:</h3>
+<h3>To view live: https://dhansolo.github.io/covid19-county-tracker/</h3>
+
+<h3>Steps to run locally:</h3>
 
 1. Please have React, Node, and npm install on your machine
 2. Generate an API Key on RapidAPI with the COVID-19 Statistics API
