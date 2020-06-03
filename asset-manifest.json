@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/covid19-county-tracker/static/css/main.962c9d5d.chunk.css",
-    "main.js": "/covid19-county-tracker/static/js/main.4fbdd50d.chunk.js",
-    "main.js.map": "/covid19-county-tracker/static/js/main.4fbdd50d.chunk.js.map",
+    "main.css": "/covid19-county-tracker/static/css/main.3b2d9647.chunk.css",
+    "main.js": "/covid19-county-tracker/static/js/main.a7b09fa8.chunk.js",
+    "main.js.map": "/covid19-county-tracker/static/js/main.a7b09fa8.chunk.js.map",
     "runtime-main.js": "/covid19-county-tracker/static/js/runtime-main.61edeb47.js",
     "runtime-main.js.map": "/covid19-county-tracker/static/js/runtime-main.61edeb47.js.map",
     "static/js/2.e07d7eba.chunk.js": "/covid19-county-tracker/static/js/2.e07d7eba.chunk.js",
     "static/js/2.e07d7eba.chunk.js.map": "/covid19-county-tracker/static/js/2.e07d7eba.chunk.js.map",
     "index.html": "/covid19-county-tracker/index.html",
-    "precache-manifest.0ffd473d545f4e46fdc96a67c574e292.js": "/covid19-county-tracker/precache-manifest.0ffd473d545f4e46fdc96a67c574e292.js",
+    "precache-manifest.24b0bcf98baaa2f332404f513169c666.js": "/covid19-county-tracker/precache-manifest.24b0bcf98baaa2f332404f513169c666.js",
     "service-worker.js": "/covid19-county-tracker/service-worker.js",
-    "static/css/main.962c9d5d.chunk.css.map": "/covid19-county-tracker/static/css/main.962c9d5d.chunk.css.map",
+    "static/css/main.3b2d9647.chunk.css.map": "/covid19-county-tracker/static/css/main.3b2d9647.chunk.css.map",
     "static/js/2.e07d7eba.chunk.js.LICENSE.txt": "/covid19-county-tracker/static/js/2.e07d7eba.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.61edeb47.js",
     "static/js/2.e07d7eba.chunk.js",
-    "static/css/main.962c9d5d.chunk.css",
-    "static/js/main.4fbdd50d.chunk.js"
+    "static/css/main.3b2d9647.chunk.css",
+    "static/js/main.a7b09fa8.chunk.js"
   ]
 }
