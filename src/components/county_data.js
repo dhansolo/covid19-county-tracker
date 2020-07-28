@@ -14,7 +14,7 @@ import LoadingScreen from './loading_screen';
 import NotFound from './not_found';
 
 import currentDate from './../utilities/current_date';
-// import thirtyDayArray from './../utilities/thirty_days';
+import usa from './../utilities/states_counties';
 
 let current;
 let thirtyDayArray = [];
@@ -196,6 +196,9 @@ class CountyData extends React.Component {
         let notfound = null;
         if(this.state.loading) {loadImage = <LoadingScreen id="loading"/>}
         if(this.state.notFound) {notfound = <NotFound />}
+        const usaItems = Object.keys(usa).map(key => 
+            <MenuItem value={key}>{key}</MenuItem>
+        )
         return (
             <div>
                 <div class="search">
@@ -203,56 +206,7 @@ class CountyData extends React.Component {
                     <FormControl variant="filled" id="search-state">
                         <InputLabel>State</InputLabel>
                         <Select type="text" value={this.state.state} onChange={this.handleStateChange}>
-                            <MenuItem value="Alabama">Alabama</MenuItem>
-                            <MenuItem value="Alaska">Alaska</MenuItem>
-                            <MenuItem value="Arizona">Arizona</MenuItem>
-                            <MenuItem value="Arkansas">Arkansas</MenuItem>
-                            <MenuItem value="California">California</MenuItem>
-                            <MenuItem value="Colorado">Colorado</MenuItem>
-                            <MenuItem value="Connecticut">Connecticut</MenuItem>
-                            <MenuItem value="Delaware">Delaware</MenuItem>
-                            <MenuItem value="Florida">Florida</MenuItem>
-                            <MenuItem value="Georgia">Georgia</MenuItem>
-                            <MenuItem value="Hawaii">Hawaii</MenuItem>
-                            <MenuItem value="Idaho">Idaho</MenuItem>
-                            <MenuItem value="Illinois">Illinois</MenuItem>
-                            <MenuItem value="Indiana">Indiana</MenuItem>
-                            <MenuItem value="Iowa">Iowa</MenuItem>
-                            <MenuItem value="Kansas">Kansas</MenuItem>
-                            <MenuItem value="Kentucky">Kentucky</MenuItem>
-                            <MenuItem value="Louisiana">Louisiana</MenuItem>
-                            <MenuItem value="Maine">Maine</MenuItem>
-                            <MenuItem value="Maryland">Maryland</MenuItem>
-                            <MenuItem value="Massachusetts">Massachusetts</MenuItem>
-                            <MenuItem value="Michigan">Michigan</MenuItem>
-                            <MenuItem value="Minnesota">Minnesota</MenuItem>
-                            <MenuItem value="Mississippi">Mississippi</MenuItem>
-                            <MenuItem value="Missouri">Missouri</MenuItem>
-                            <MenuItem value="Montana">Montana</MenuItem>
-                            <MenuItem value="Nebraska">Nebraska</MenuItem>
-                            <MenuItem value="Nevada">Nevada</MenuItem>
-                            <MenuItem value="New Hampshire">New Hampshire</MenuItem>
-                            <MenuItem value="New Jersey">New Jersey</MenuItem>
-                            <MenuItem value="New Mexico">New Mexico</MenuItem>
-                            <MenuItem value="New York">New York</MenuItem>
-                            <MenuItem value="North Carolina">North Carolina</MenuItem>
-                            <MenuItem value="North Dakota">North Dakota</MenuItem>
-                            <MenuItem value="Ohio">Ohio</MenuItem>
-                            <MenuItem value="Oklahoma">Oklahoma</MenuItem>
-                            <MenuItem value="Oregon">Oregon</MenuItem>
-                            <MenuItem value="Pennsylvania">Pennsylvania</MenuItem>
-                            <MenuItem value="Rhode Island">Rhode Island</MenuItem>
-                            <MenuItem value="South Carolina">South Carolina</MenuItem>
-                            <MenuItem value="South Dakota">South Dakota</MenuItem>
-                            <MenuItem value="Tennessee">Tennessee</MenuItem>
-                            <MenuItem value="Texas">Texas</MenuItem>
-                            <MenuItem value="Utah">Utah</MenuItem>
-                            <MenuItem value="Vermont">Vermont</MenuItem>
-                            <MenuItem value="Virginia">Virginia</MenuItem>
-                            <MenuItem value="Washington">Washington</MenuItem>
-                            <MenuItem value="West Virginia">West Virginia</MenuItem>
-                            <MenuItem value="Wisconsin">Wisconsin</MenuItem>
-                            <MenuItem value="Wyoming">Wyoming</MenuItem>
+                            {usaItems}
                         </Select>
                     </FormControl>
                 </div>

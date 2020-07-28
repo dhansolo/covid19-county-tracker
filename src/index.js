@@ -12,7 +12,12 @@ import WorldData from './components/world_data'
 import CountyData from './components/county_data';
 import ChangeLog from './components/change_log';
 
+// import usa from './utilities/states_counties';
+
 function App() {
+    // Object.entries(usa).forEach(([key, value]) => {
+    //     console.log(`${key} ${value}`);
+    // });
     return (
         <Grid container justify="center">
             <Grid item xs={12}>

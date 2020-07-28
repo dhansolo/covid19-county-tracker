@@ -3,6 +3,9 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Chip from '@material-ui/core/Chip';
 import Paper from '@material-ui/core/Paper';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+import Popover from '@material-ui/core/Popover';
 
 import VisualizeConfirmed from './visualize_confirmed';
 import VisualizeDeaths from './visualize_deaths';
@@ -10,6 +13,20 @@ import VisualizeDeaths from './visualize_deaths';
 let type = 'County';
 
 class Info extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            open: false,
+        }
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    handleClick(event) {
+        this.setState({
+            open: !this.state.open
+        })
+    }
+
     render() {
         let rate = (this.props.deaths/this.props.confirmed) * 100;
         if(this.props.state === "Alaska") { type = "Borough"}
@@ -57,6 +74,16 @@ class Info extends React.Component {
                     <Paper id="visualize-confirmed" variant='elevation' elevation={24}><VisualizeConfirmed county={this.props.county} minConfirmed={this.props.minConfirmed} maxConfirmed={this.props.maxConfirmed} thirtyDayArray={this.props.thirtyDayArray}/></Paper>
                     <Paper id="visualize-deaths" variant='elevation' elevation={24}><VisualizeDeaths county={this.props.county} minDeaths={this.props.minDeaths} maxDeaths={this.props.maxDeaths} thirtyDayArray={this.props.thirtyDayArray}/></Paper>
                 </Grid>
+                {/* <div>
+                    <Fab id="graphs-button" size="small" onClick={this.handleClick}>
+                        <AddIcon />
+                    </Fab>
+                    <Popover id="graphs-popover" anchorReference="anchorPosition" anchorPosition={{top: 600, left: 0}} anchorOrigin={{vertical: 'bottom', horizontal: 'left'}} transformationOrigin={{vertical: 'top', horizontal: 'right'}} open={this.state.open} onClose={this.handleClick}>
+                        <div id="graphs-popover-contents">
+                                <p>Be sure to swipe the graph and click on the dots for more info!</p>
+                        </div>
+                    </Popover>
+                </div> */}
             </div>
         )  
     }
