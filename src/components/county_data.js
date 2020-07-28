@@ -178,8 +178,10 @@ class CountyData extends React.Component {
         if(this.state.data && !this.state.loading) {
             // console.log(this.state.data);
             // Throwing everything to the Info component to render
+            // console.log(this.state.data);
             info = <Info 
                 confirmed={this.state.data.confirmed} 
+                change={this.state.data.confirmed_diff}
                 deaths={this.state.data.deaths} 
                 county={this.state.data.name} 
                 state={this.state.state} 

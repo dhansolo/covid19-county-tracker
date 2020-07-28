@@ -10,6 +10,7 @@ import Avatar from '@material-ui/core/Avatar';
 
 import WorldData from './components/world_data'
 import CountyData from './components/county_data';
+import ChangeLog from './components/change_log';
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                     </div>
                     <header class="world-data"><WorldData /></header>
                     <div class="search"><CountyData /></div>
+                    <ChangeLog />
                     <footer>
                         <Link href="https://www.linkedin.com/in/davidhan93/"><Chip id="chip" avatar={<Avatar>DH</Avatar>} label="Created by David Han" clickable></Chip></Link>
                         <Link href="https://www.linkedin.com/in/john-son-997aaa175/"><Chip id="chip" avatar={<Avatar>JS</Avatar>} label="Styled by John Son" clickable></Chip></Link>

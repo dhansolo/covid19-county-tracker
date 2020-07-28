@@ -30,7 +30,7 @@ class DisplayWorldData extends React.Component {
                             </div>
                         }>
                     </Chip>
-                    <Chip 
+                    {/* <Chip 
                         id="world-deaths" 
                         label={
                             <div>
@@ -38,7 +38,7 @@ class DisplayWorldData extends React.Component {
                                 <div>{numberWithCommas(this.props.data.deaths)}</div>
                             </div>
                         }>
-                    </Chip>
+                    </Chip> */}
                     <Chip 
                         id="world-rate" 
                         label={

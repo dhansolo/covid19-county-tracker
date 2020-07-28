@@ -32,11 +32,11 @@ class Info extends React.Component {
                                 }>
                             </Chip>
                             <Chip 
-                                id="county-deaths" 
+                                id="county-change" 
                                 label={
                                     <div>
-                                        <div><b>Fatalities:</b></div>
-                                        <div>{this.props.deaths}</div>
+                                        <div><b>Daily Change:</b></div>
+                                        <div>{this.props.change}</div>
                                     </div>
                                 }>
                             </Chip>
