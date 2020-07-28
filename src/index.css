@@ -117,6 +117,10 @@ html {
     background: #FCFF62
 }
 
+#county-recovered {
+    background: #47B9FF
+}
+
 #county-deaths {
     background: #FF4249
 }
@@ -125,7 +129,7 @@ html {
     background: #FFAD2D
 }
 
-#county-confirmed, #county-deaths, #county-rate {
+#county-confirmed, #county-recovered, #county-deaths, #county-rate {
     font-size: 12px;
     margin: 0px 5px 0px 5px;
 }
@@ -136,15 +140,16 @@ html {
 
 footer {
     position: fixed;
-    left: 0;
-    bottom: 0px;
+    padding-top: 5px;
+    bottom: 0;
     width: 100%;
     color: black;
-    text-align: center;
+    background-color: #FFDEBB;
+    border-radius: 10px 10px 0px 0px;
 }
 
 #chip {
-    background-color: lightgray;
+    background-color: gray;
     margin-left: 5px;
     margin-right: 5px;
     margin-bottom: 10px;
