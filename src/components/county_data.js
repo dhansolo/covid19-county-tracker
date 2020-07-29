@@ -17,7 +17,7 @@ import usa from './../utilities/states_counties';
 
 let current;
 let thirtyDayArray = [];
-let selectedStateCounties;
+let selectedStateCounties = <MenuItem id="county-placeholder" disabled>Please Select a State</MenuItem>;
 let date = moment().subtract(1, 'days');
 let info = null;
 
@@ -214,7 +214,7 @@ class CountyData extends React.Component {
                     </FormControl>
                     <FormControl variant="filled" id="search-county">
                         <InputLabel>County</InputLabel>
-                        <Select type="text" value={this.state.county} onChange={this.handleCountyChange}>
+                        <Select type="text" value={this.state.county} onOpen={this.handleBadState} onChange={this.handleCountyChange}>
                             {selectedStateCounties}
                         </Select>
                     </FormControl>

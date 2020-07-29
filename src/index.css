@@ -31,6 +31,12 @@ html {
     border-radius: 10px 10px 10px 10px;
 }
 
+#county-placeholder {
+    background-color: red;
+    color: white;
+    text-shadow: 2px 2px black;
+}
+
 #search-button {
     margin: 0px 10px 10px 20px;
     height: 47px;

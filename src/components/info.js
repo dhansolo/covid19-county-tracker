@@ -35,7 +35,7 @@ class Info extends React.Component {
         return (
             <div>
                 <Grid container justify="center">
-                    <div class="info">
+                    <div className="info">
                         {/* <div>Graphs are draggable to the left and right. Hovering over points will show the exact numbers.</div> */}
                         {/* <Paper variant='elevation' elevation={24}> */}
                             <h3>Statistics for {this.props.county} {type}, {this.props.state}</h3>
