@@ -7,6 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Chip from '@material-ui/core/Chip';
 import Link from '@material-ui/core/Link';
 import Avatar from '@material-ui/core/Avatar';
+import Divider from '@material-ui/core/Divider';
 
 import WorldData from './components/world_data'
 import CountyData from './components/county_data';
@@ -22,6 +23,7 @@ function App() {
                         <h1>COVID-19 County Tracker</h1>
                         <Chip id="date-chip" label={"Data as of " + moment().subtract(1, 'days').format("MMMM DD, YYYY") + " from John Hopkins University"}></Chip>
                     </div>
+                    <hr></hr>
                     <header className="world-data"><WorldData /></header>
                     <div className="search"><CountyData /></div>
                     <ChangeLog />
