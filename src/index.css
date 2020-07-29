@@ -181,6 +181,28 @@ footer {
     background-color: #FFDEBB;
 }
 
+#helper-button {
+    position: fixed;
+    right: 0.2%;
+    top: 0.3%;
+    z-index: 999;
+    background-color: #FFAD2D;
+}
+
+#helper-popover {
+    width: 100%;
+    font-family: "Roboto", sans-serif;
+}
+
+#helper-popover h2 {
+    text-align: center;
+}
+
+#helper-contents {
+    border: 2px solid lightcoral;
+    background-color: #FFDEBB;
+}
+
 #chip {
     background-color: gray;
     opacity: 0.75;
