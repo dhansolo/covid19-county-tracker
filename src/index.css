@@ -15,19 +15,18 @@ html {
     color: white;
 }
 
-
-#search-county {
+#search-state {
     text-align: center;
-    width: 125px;
-    right: 10px;
+    width: 150px;
+    right: 5px;
     background-color: white;
     border-radius: 10px 10px 10px 10px;
 }
 
-#search-state {
+#search-county {
     text-align: center;
     width: 150px;
-    left: 10px;
+    left: 5px;
     background-color: white;
     border-radius: 10px 10px 10px 10px;
 }

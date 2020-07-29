@@ -2,7 +2,6 @@ import React from 'react';
 import axios from 'axios';
 import * as moment from 'moment/moment';
 
-import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -18,6 +17,7 @@ import usa from './../utilities/states_counties';
 
 let current;
 let thirtyDayArray = [];
+let selectedStateCounties;
 let date = moment().subtract(1, 'days');
 let info = null;
 
@@ -65,6 +65,10 @@ class CountyData extends React.Component {
             data: null,
             notFound: false
         });
+        selectedStateCounties = null;
+        selectedStateCounties = Object.values(usa[event.target.value]).map(county =>
+            <MenuItem value={county}>{county}</MenuItem>
+        );
     }
 
     // This is where all of the movement occurs
@@ -196,17 +200,22 @@ class CountyData extends React.Component {
         let notfound = null;
         if(this.state.loading) {loadImage = <LoadingScreen id="loading"/>}
         if(this.state.notFound) {notfound = <NotFound />}
-        const usaItems = Object.keys(usa).map(key => 
-            <MenuItem value={key}>{key}</MenuItem>
+        const usaItems = Object.keys(usa).map(state => 
+            <MenuItem value={state}>{state}</MenuItem>
         )
         return (
             <div>
-                <div class="search">
-                    <TextField id="search-county" type="text" label="County" variant="filled" value={this.state.county} onChange={this.handleCountyChange}></TextField>
+                <div className="search">
                     <FormControl variant="filled" id="search-state">
                         <InputLabel>State</InputLabel>
                         <Select type="text" value={this.state.state} onChange={this.handleStateChange}>
                             {usaItems}
+                        </Select>
+                    </FormControl>
+                    <FormControl variant="filled" id="search-county">
+                        <InputLabel>County</InputLabel>
+                        <Select type="text" value={this.state.county} onChange={this.handleCountyChange}>
+                            {selectedStateCounties}
                         </Select>
                     </FormControl>
                 </div>

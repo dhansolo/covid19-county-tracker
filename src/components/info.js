@@ -3,9 +3,9 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Chip from '@material-ui/core/Chip';
 import Paper from '@material-ui/core/Paper';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-import Popover from '@material-ui/core/Popover';
+// import Fab from '@material-ui/core/Fab';
+// import AddIcon from '@material-ui/icons/Add';
+// import Popover from '@material-ui/core/Popover';
 
 import VisualizeConfirmed from './visualize_confirmed';
 import VisualizeDeaths from './visualize_deaths';

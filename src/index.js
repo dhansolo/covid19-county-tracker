@@ -12,22 +12,17 @@ import WorldData from './components/world_data'
 import CountyData from './components/county_data';
 import ChangeLog from './components/change_log';
 
-// import usa from './utilities/states_counties';
-
 function App() {
-    // Object.entries(usa).forEach(([key, value]) => {
-    //     console.log(`${key} ${value}`);
-    // });
     return (
         <Grid container justify="center">
             <Grid item xs={12}>
-                <div class="main">
-                    <div class="headers">
+                <div className="main">
+                    <div className="headers">
                         <h1>COVID-19 County Tracker</h1>
                         <Chip id="date-chip" label={"Data as of " + moment().subtract(1, 'days').format("MMMM DD, YYYY") + " from John Hopkins University"}></Chip>
                     </div>
-                    <header class="world-data"><WorldData /></header>
-                    <div class="search"><CountyData /></div>
+                    <header className="world-data"><WorldData /></header>
+                    <div className="search"><CountyData /></div>
                     <ChangeLog />
                     <footer>
                         <Link href="https://www.linkedin.com/in/davidhan93/"><Chip id="chip" avatar={<Avatar>DH</Avatar>} label="Created by David Han" clickable></Chip></Link>

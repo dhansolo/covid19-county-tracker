@@ -5,7 +5,7 @@ class NotFound extends React.Component {
         return (
             <div class="info">
                 <p>
-                No data found, are you sure you entered the correct County and State?
+                No data found
                 </p>
                 <p>
                 Please note that data from John Hopkins University may contain some
