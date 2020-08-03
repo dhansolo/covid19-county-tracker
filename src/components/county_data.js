@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import * as moment from 'moment/moment';
+import moment from 'moment/moment';
 
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -25,6 +25,10 @@ let minConfirmed = null;
 let minDeaths = null;
 let maxConfirmed = null;
 let maxDeaths = null;
+
+const usaItems = Object.keys(usa).map((state, i) => 
+    <MenuItem key={i} value={state}>{state}</MenuItem>
+)
 
 class CountyData extends React.Component {
     constructor(props) {
@@ -60,15 +64,15 @@ class CountyData extends React.Component {
 
     // When a state is selected on the dropdown menu
     handleStateChange(event) {
+        selectedStateCounties = null;
+        selectedStateCounties = Object.values(usa[event.target.value]).map((county, i) =>
+            <MenuItem key={i} value={county}>{county}</MenuItem>
+        );
         this.setState({
             state: event.target.value,
             data: null,
             notFound: false
         });
-        selectedStateCounties = null;
-        selectedStateCounties = Object.values(usa[event.target.value]).map(county =>
-            <MenuItem value={county}>{county}</MenuItem>
-        );
     }
 
     // This is where all of the movement occurs
@@ -152,6 +156,10 @@ class CountyData extends React.Component {
                 }
                 if(response.data.data[0].region.cities[0].deaths_diff > maxDeaths || maxDeaths === null) { 
                     maxDeaths = response.data.data[0].region.cities[0].deaths_diff; 
+                    console.log(maxDeaths)
+                    if(maxDeaths < 0) {
+                        maxDeaths = 0;
+                    }
                 }
                 // Push data into thirtyDayArray array
                 thirtyDayArray.push(
@@ -200,9 +208,6 @@ class CountyData extends React.Component {
         let notfound = null;
         if(this.state.loading) {loadImage = <LoadingScreen id="loading"/>}
         if(this.state.notFound) {notfound = <NotFound />}
-        const usaItems = Object.keys(usa).map(state => 
-            <MenuItem value={state}>{state}</MenuItem>
-        )
         return (
             <div>
                 <div className="search">
