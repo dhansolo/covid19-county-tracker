@@ -26,6 +26,8 @@ let minDeaths = null;
 let maxConfirmed = null;
 let maxDeaths = null;
 
+let noData = false;
+
 const usaItems = Object.keys(usa).map((state, i) => 
     <MenuItem key={i} value={state}>{state}</MenuItem>
 )
@@ -87,6 +89,7 @@ class CountyData extends React.Component {
         maxConfirmed = null;
         maxDeaths = null;
         let count = 0;
+        noData = false;
 
         this.setState({ county: this.state.county, loading: true, notFound: false, data: null}); 
         // Looping 30 times to get 30 days worth of data
@@ -141,7 +144,9 @@ class CountyData extends React.Component {
             }
         })
         .then((response)=>{
-            if(response.data.data.length > 0) {
+            if(response.data.data.length > 0 && !noData) {
+                // console.log("data found");
+                // console.log("");
                 if(current === currentDate) {
                     this.setState({ data: response.data.data[0].region.cities[0], notFound: false});
                 }
@@ -156,7 +161,6 @@ class CountyData extends React.Component {
                 }
                 if(response.data.data[0].region.cities[0].deaths_diff > maxDeaths || maxDeaths === null) { 
                     maxDeaths = response.data.data[0].region.cities[0].deaths_diff; 
-                    console.log(maxDeaths)
                     if(maxDeaths < 0) {
                         maxDeaths = 0;
                     }
@@ -177,7 +181,12 @@ class CountyData extends React.Component {
                 }
             } else {
                 // Data not found
-                this.setState({ data: null, notFound: true, loading: false});
+                if(!noData) {
+                    // console.log("no data found");
+                    noData = true;
+                    this.setState({ data: null, notFound: true, loading: false});
+                }
+                return;
             }
         })
         .catch((error)=>{
@@ -206,8 +215,14 @@ class CountyData extends React.Component {
         }
         let loadImage = null;
         let notfound = null;
-        if(this.state.loading) {loadImage = <LoadingScreen id="loading"/>}
-        if(this.state.notFound) {notfound = <NotFound />}
+        if(this.state.loading) {
+            loadImage = <LoadingScreen id="loading"/>
+        }
+        if(this.state.notFound) {
+            notfound = <NotFound />
+        } else {
+            notfound = null;
+        }
         return (
             <div>
                 <div className="search">

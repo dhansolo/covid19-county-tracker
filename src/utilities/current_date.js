@@ -1,4 +1,4 @@
-import * as moment from 'moment/moment';
+import moment from 'moment/moment';
 
 // Create a date string in the format YYYY-MM-DD
 let date = moment().subtract(1, 'days');
