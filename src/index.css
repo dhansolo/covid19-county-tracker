@@ -170,7 +170,8 @@ footer {
     left: 0.2%;
     top: 0.3%;
     z-index: 999;
-    background-color: #47B9FF;
+    background-color: #40E8FE;
+    color: white;
 }
 
 #change-log-popover {
@@ -192,7 +193,8 @@ footer {
     right: 0.2%;
     top: 0.3%;
     z-index: 999;
-    background-color: #FFAD2D;
+    background-color: #FF1C32;
+    color: white;
 }
 
 #helper-popover {
