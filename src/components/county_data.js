@@ -246,7 +246,7 @@ class CountyData extends React.Component {
                     </FormControl>
                     <FormControl variant="filled" id="search-county">
                         <InputLabel>County</InputLabel>
-                        <Select id="dropdown" type="text" value={this.state.county} onChange={!this.state.loading ? this.handleCountyChange : null}>
+                        <Select id="dropdown" type="text" value={this.state.county} onChange={this.handleCountyChange}>
                             {selectedStateCounties}
                         </Select>
                     </FormControl>
