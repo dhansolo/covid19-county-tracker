@@ -31,6 +31,8 @@ class ChangeLog extends React.Component {
                         <ul>
                             <li>Fixed bug where fetching data would continuously run even if there was one bad set of data, which caused unintended behavior</li>
                             <li>Fixed bug where some counties had insufficient data and would crash the app</li>
+                            <li>Fixed bug where you are no longer able to spam the search button</li>
+                            <li>Updated X-axis to show month abbreviations instead of numbers</li>
                             <li>Updated UI elements to better engage users</li>
                         </ul>
                         {/* <h2>Update 07.28.2020</h2>

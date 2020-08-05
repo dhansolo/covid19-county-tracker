@@ -78,8 +78,8 @@ class CountyData extends React.Component {
     }
 
     // This is where all of the movement occurs
-    handleSearchClick() {
-        if(this.state.county === "" || this.state.state === "") { return; }
+    handleSearchClick(e) {
+        if(this.state.county === "" || this.state.state === "" || this.state.loading) { return; }
         // Reset all necessary variables before you search again
         thirtyDayArray = [];
         this.setState({ data: null});
@@ -146,21 +146,30 @@ class CountyData extends React.Component {
         .then((response)=>{
             if(response.data.data.length > 0 && !noData) {
                 // console.log("data found");
-                // console.log("");
+                // console.log(response.data.data);
                 if(current === currentDate) {
                     this.setState({ data: response.data.data[0].region.cities[0], notFound: false});
                 }
                 if(response.data.data[0].region.cities[0].confirmed_diff < minConfirmed || minConfirmed === null) { 
                     minConfirmed = response.data.data[0].region.cities[0].confirmed_diff; 
+                    if(minConfirmed < 0) {
+                        minConfirmed = 0;
+                    }
                 }
                 if(response.data.data[0].region.cities[0].confirmed_diff > maxConfirmed || maxConfirmed === null) { 
                     maxConfirmed = response.data.data[0].region.cities[0].confirmed_diff; 
+                    if(maxConfirmed < 0) {
+                        maxConfirmed = 0;
+                    }
                 }
                 if(response.data.data[0].region.cities[0].deaths_diff < minDeaths || minDeaths === null) { 
                     minDeaths = response.data.data[0].region.cities[0].deaths_diff; 
+                    if(minDeaths < 0) {
+                        minDeaths = 0;
+                    }
                 }
                 if(response.data.data[0].region.cities[0].deaths_diff > maxDeaths || maxDeaths === null) { 
-                    maxDeaths = response.data.data[0].region.cities[0].deaths_diff; 
+                    maxDeaths = parseInt(response.data.data[0].region.cities[0].deaths_diff, 10); 
                     if(maxDeaths < 0) {
                         maxDeaths = 0;
                     }
@@ -169,14 +178,15 @@ class CountyData extends React.Component {
                 thirtyDayArray.push(
                     {
                         date: current,
-                        confirmed: response.data.data[0].region.cities[0].confirmed_diff,
-                        deaths: response.data.data[0].region.cities[0].deaths_diff
+                        confirmed: (response.data.data[0].region.cities[0].confirmed_diff < 0 ? 0 : response.data.data[0].region.cities[0].confirmed_diff),
+                        deaths: (response.data.data[0].region.cities[0].deaths_diff < 0 ? 0 : response.data.data[0].region.cities[0].deaths_diff)
                     }
                 )
                 // Sort it by date after every push
                 thirtyDayArray.sort((a, b) => new Date(a.date) - new Date(b.date));
                 if(thirtyDayArray.length === 30) {
                     // Will not stop loading until there is exactly 30 items in the array
+                    // console.log(thirtyDayArray);
                     this.setState({ loading: false })
                 }
             } else {
