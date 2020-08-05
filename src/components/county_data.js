@@ -28,7 +28,7 @@ let maxDeaths = null;
 
 let noData = false;
 
-const usaItems = Object.keys(usa).map((state, i) => 
+let usaItems = Object.keys(usa).map((state, i) => 
     <MenuItem key={i} value={state}>{state}</MenuItem>
 )
 
@@ -49,6 +49,7 @@ class CountyData extends React.Component {
 
     // Every keypress in the County input field will cause an update
     handleCountyChange(event) {
+        if(this.state.loading) { event.preventDefault(); return; }
         if(event.target.value) {
             this.setState({
                 county: event.target.value,
@@ -66,6 +67,7 @@ class CountyData extends React.Component {
 
     // When a state is selected on the dropdown menu
     handleStateChange(event) {
+        if(this.state.loading) { event.preventDefault(); return; }
         selectedStateCounties = null;
         selectedStateCounties = Object.values(usa[event.target.value]).map((county, i) =>
             <MenuItem key={i} value={county}>{county}</MenuItem>
@@ -78,7 +80,7 @@ class CountyData extends React.Component {
     }
 
     // This is where all of the movement occurs
-    handleSearchClick(e) {
+    handleSearchClick() {
         if(this.state.county === "" || this.state.state === "" || this.state.loading) { return; }
         // Reset all necessary variables before you search again
         thirtyDayArray = [];
@@ -244,7 +246,7 @@ class CountyData extends React.Component {
                     </FormControl>
                     <FormControl variant="filled" id="search-county">
                         <InputLabel>County</InputLabel>
-                        <Select type="text" value={this.state.county} onOpen={this.handleBadState} onChange={this.handleCountyChange}>
+                        <Select id="dropdown" type="text" value={this.state.county} onChange={!this.state.loading ? this.handleCountyChange : null}>
                             {selectedStateCounties}
                         </Select>
                     </FormControl>
