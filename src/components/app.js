@@ -13,7 +13,7 @@ import ChangeLog from './change_log';
 import Helper from './helper';
 
 class App extends React.Component{
-    render() {
+    render = () => {
         return (
             <Grid container justify="center">
                 <Grid item xs={12}>

@@ -10,16 +10,15 @@ class ChangeLog extends React.Component {
         this.state = {
             open: false,
         }
-        this.handleClick = this.handleClick.bind(this);
     }
 
-    handleClick(event) {
+    handleClick = (event) => {
         this.setState({
             open: !this.state.open
         })
     }
 
-    render() {
+    render = () => {
         return (
             <div>
                 <Fab id="change-log-button" size="small" onClick={this.handleClick}>

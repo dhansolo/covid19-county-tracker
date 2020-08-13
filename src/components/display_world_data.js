@@ -1,12 +1,12 @@
 import React from 'react';
 import Chip from '@material-ui/core/Chip';
 
-function numberWithCommas(x) {
+let numberWithCommas = x => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 class DisplayWorldData extends React.Component {
-    render() {
+    render = () => {
         let rate = (this.props.data.fatality_rate * 100);
         return(
             <div>

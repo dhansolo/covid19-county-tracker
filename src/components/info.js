@@ -18,16 +18,15 @@ class Info extends React.Component {
         this.state = {
             open: false,
         }
-        this.handleClick = this.handleClick.bind(this);
     }
 
-    handleClick(event) {
+    handleClick = (event) => {
         this.setState({
             open: !this.state.open
         })
     }
 
-    render() {
+    render = () => {
         let rate = (this.props.deaths/this.props.confirmed) * 100;
         if(this.props.state === "Alaska") { type = "Borough"}
         if(this.props.state === "Louisiana") { type = "Parish"}

@@ -3,10 +3,10 @@ import React from 'react';
 import {VictoryChart, VictoryZoomContainer, VictoryTooltip, VictoryLabel, VictoryLine, VictoryScatter} from 'victory';
 
 let type = 'County';
-let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', "Sep", 'Oct', 'Nov', 'Dec'];
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', "Sep", 'Oct', 'Nov', 'Dec'];
 
 class VisualizeConfirmed extends React.Component {
-    render() {
+    render = () => {
         return(
             <div>
                 {/* <p>Changes in Confirmed Cases Over 30 Days for {this.props.county} County</p> */}

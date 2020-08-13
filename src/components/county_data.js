@@ -42,13 +42,10 @@ class CountyData extends React.Component {
             data: null,
             notFound: false,
         }
-        this.handleCountyChange = this.handleCountyChange.bind(this);
-        this.handleStateChange = this.handleStateChange.bind(this);
-        this.handleSearchClick = this.handleSearchClick.bind(this);
     }
 
     // Every keypress in the County input field will cause an update
-    handleCountyChange(event) {
+    handleCountyChange = (event) => {
         if(this.state.loading) { event.preventDefault(); return; }
         if(event.target.value) {
             this.setState({
@@ -66,7 +63,7 @@ class CountyData extends React.Component {
     }
 
     // When a state is selected on the dropdown menu
-    handleStateChange(event) {
+    handleStateChange = (event) => {
         if(this.state.loading) { event.preventDefault(); return; }
         selectedStateCounties = null;
         selectedStateCounties = Object.values(usa[event.target.value]).map((county, i) =>
@@ -80,7 +77,7 @@ class CountyData extends React.Component {
     }
 
     // This is where all of the movement occurs
-    handleSearchClick() {
+    handleSearchClick = () => {
         if(this.state.county === "" || this.state.state === "" || this.state.loading) { return; }
         // Reset all necessary variables before you search again
         thirtyDayArray = [];
@@ -117,7 +114,7 @@ class CountyData extends React.Component {
     }
 
     // Function to make the Axios http request so that the above looks cleaner
-    getData(current) {
+    getData = (current) => {
         // API doesn't like the word 'county' so I'm reformatting the user's terms here to omit 'county'
         // as well as adjusting the casing as the API likes exactness
         let reformattedCounty = this.state.county.toLowerCase();
@@ -207,7 +204,7 @@ class CountyData extends React.Component {
         }) 
     }
 
-    render() {
+    render = () => {
         if(this.state.data && !this.state.loading) {
             // console.log(this.state.data);
             // Throwing everything to the Info component to render

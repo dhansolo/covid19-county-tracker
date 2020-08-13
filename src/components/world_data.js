@@ -13,7 +13,7 @@ class WorldData extends React.Component {
             loading: true
         }
     }
-    componentDidMount() {
+    componentDidMount = () => {
         axios({
             "method":"GET",
             "url":"https://covid-19-statistics.p.rapidapi.com/reports/total",
@@ -32,7 +32,7 @@ class WorldData extends React.Component {
               console.log(error)
             })
     }
-    render() {
+    render = () => {
         let data;
         let loadImage;
         if(this.state.loading) {

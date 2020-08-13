@@ -6,7 +6,7 @@ let type = 'County';
 let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', "Sep", 'Oct', 'Nov', 'Dec'];
 
 class VisualizeDeaths extends React.Component {
-    render() {
+    render = () => {
         return(
             <div>
                 {/* <p>Number of Fatalities Over 30 Days for {this.props.county} County</p> */}
