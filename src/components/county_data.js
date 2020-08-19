@@ -181,10 +181,11 @@ class CountyData extends React.Component {
                         deaths: (response.data.data[0].region.cities[0].deaths_diff < 0 ? 0 : response.data.data[0].region.cities[0].deaths_diff)
                     }
                 )
-                // Sort it by date after every push
-                thirtyDayArray.sort((a, b) => new Date(a.date) - new Date(b.date));
                 if(thirtyDayArray.length === 30) {
                     // Will not stop loading until there is exactly 30 items in the array
+                    // Sort it by date
+                    thirtyDayArray.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    // console.log(thirtyDayArray);
                     // console.log(thirtyDayArray);
                     this.setState({ loading: false })
                 }
